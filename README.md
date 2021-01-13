@@ -1,2 +1,5 @@
-# steedos-app-amis
-使用华炎魔方管理、在线设计、运行AMIS页面
+# Steedos Community
+
+在华炎魔方中创建和管理外部社区，使用AMIS自定义社区页面，整合AMIS在线编辑器。
+
+
