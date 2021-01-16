@@ -1,0 +1,5 @@
+name: unassign
+is_enable: true
+label: Unassign
+'on': list
+visible: true

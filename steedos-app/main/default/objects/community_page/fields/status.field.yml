@@ -1,0 +1,20 @@
+name: status
+filterable: false
+hidden: false
+index: false
+is_name: false
+is_wide: false
+label: STATUS
+multiple: false
+omit: false
+options:
+  - label: Unpublished
+    value: Unpublished
+  - label: published
+    value: published
+readonly: false
+required: false
+searchable: false
+sort_no: 190
+sortable: false
+type: select

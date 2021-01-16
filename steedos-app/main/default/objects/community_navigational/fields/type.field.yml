@@ -1,0 +1,32 @@
+name: type
+filterable: false
+hidden: false
+index: false
+is_name: false
+is_wide: false
+label: Type
+multiple: false
+omit: false
+options:
+  - label: Community Page
+    value: InternalLink
+  - label: Event
+    value: Event
+  - label: External URL
+    value: ExternalLink
+  - label: Global Action
+    value: GlobalAction
+  - label: Menu Label
+    value: MenuLabel
+  - label: Navigational Topic
+    value: NavigationalTopic
+  - label: Salesforce Object
+    value: SalesforceObject
+  - label: System Link
+    value: SystemLink
+readonly: false
+required: false
+searchable: false
+sort_no: 130
+sortable: false
+type: select

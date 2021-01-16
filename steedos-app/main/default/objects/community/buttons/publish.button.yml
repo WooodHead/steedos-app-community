@@ -1,0 +1,5 @@
+name: publish
+is_enable: true
+label: Publish
+'on': record_only
+visible: true

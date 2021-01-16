@@ -1,0 +1,15 @@
+name: object_name
+filterable: false
+group: Steedos Object
+hidden: false
+index: false
+is_name: false
+is_wide: false
+label: Object Type
+omit: false
+readonly: false
+required: false
+searchable: false
+sort_no: 170
+sortable: false
+type: text

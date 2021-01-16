@@ -1,0 +1,16 @@
+name: community
+filterable: false
+hidden: false
+index: false
+is_name: false
+is_wide: false
+label: Community
+omit: false
+readonly: false
+reference_to: community
+required: false
+searchable: false
+sort_no: 120
+sortable: false
+type: master_detail
+write_requires_master_read: false

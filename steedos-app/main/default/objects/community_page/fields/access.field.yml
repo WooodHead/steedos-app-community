@@ -1,0 +1,22 @@
+name: access
+filterable: false
+hidden: false
+index: false
+is_name: false
+is_wide: false
+label: Page Access
+multiple: false
+omit: false
+options:
+  - label: 'Community Default Setting: Public'
+    value: UseParent
+  - label: Public
+    value: Public
+  - label: Requires Login
+    value: RequiresLogin
+readonly: false
+required: false
+searchable: false
+sort_no: 140
+sortable: false
+type: select

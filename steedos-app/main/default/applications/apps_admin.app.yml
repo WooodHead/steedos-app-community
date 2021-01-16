@@ -1,0 +1,12 @@
+_id: apps_feature_settings
+name: Apps
+admin_menus:
+  - _id: feature_settings
+    name: Feature Settings
+  - _id: communities
+    name: Communities
+    parent: feature_settings
+  - _id: all_communities
+    name: All Communities
+    object_name: community
+    parent: communities

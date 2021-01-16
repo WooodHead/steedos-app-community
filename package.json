@@ -1,0 +1,44 @@
+{
+  "name": "steedos-app-community",
+  "version": "1.0.0",
+  "description": "在华炎魔方中创建和管理外部社区，使用AMIS自定义社区页面，整合AMIS在线编辑器。",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/steedos/steedos-app-community.git"
+  },
+  "scripts": {
+    "debug": "nodemon server.js",
+    "start": "node server.js",
+    "os": "cp -r F:/GitHub/steedos-platform/packages/* node_modules/@steedos/ && cp -r F:/GitHub/steedos-platform/server/* node_modules/steedos-server/",
+    "linkToDevPlatform": "node .scripts/npm-postinstall.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "dependencies": {
+    "@steedos/plugin-monaco-editor": "1.0.0"
+  },
+  "devDependencies": {
+    "@steedos/accounts": "^1.23.0-alpha.16",
+    "@steedos/steedos-plugin-workflow": "^2.0.8",
+    "dotenv-flow": "^3.1.0",
+    "nodemon": "^1.19.1",
+    "steedos-server": "^1.23.0-alpha.16"
+  },
+  "resolutions": {
+    "**/lodash": "^4.17.15",
+    "**/handlebars": "^4.3.0",
+    "**/debug": "^3.1.0",
+    "**/hoek": "^5.0.3",
+    "**/cryptiles": "^4.1.2",
+    "**/bcrypt": "3.0.6",
+    "**/samlp": "3.4.1",
+    "**/xmldom": "0.2.1",
+    "**/tslib": "1.11.2",
+    "**/fibers": "^4.0.3"
+  },
+  "bugs": {
+    "url": "https://github.com/steedos/steedos-app-community/issues"
+  },
+  "homepage": "https://github.com/steedos/steedos-app-community#readme"
+}

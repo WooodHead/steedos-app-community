@@ -1,0 +1,5 @@
+name: editor
+is_enable: true
+label: 设计页面2
+'on': record
+visible: true

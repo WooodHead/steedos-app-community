@@ -1,0 +1,18 @@
+name: layout
+description: 从模板选择
+filterable: false
+hidden: false
+index: false
+inlineHelpText: >-
+  Content layouts define the content regions of your page, such as a two-column
+  layout.
+is_name: false
+is_wide: false
+label: 'Layout [TODO]'
+omit: false
+readonly: false
+required: false
+searchable: false
+sort_no: 180
+sortable: false
+type: text
