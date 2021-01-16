@@ -8,6 +8,11 @@ const Preview = React.lazy(() => import('./Preview'));
 const Editor = React.lazy(() => import('./Editor'));
 
 export default observer(function({store}: {store: IMainStore}) {
+    let redirectTo = '';
+    if(store.pages.length > 0){
+        redirectTo = store.pages[0].path
+    }
+    console.log('redirectTo', redirectTo);
     return (
         <Router>
             <div className="routes-wrapper">
@@ -15,7 +20,9 @@ export default observer(function({store}: {store: IMainStore}) {
                 <AlertComponent key="alert" theme={store.theme} />
                 <React.Suspense fallback={<Spinner overlay className="m-t-lg" size="lg" />}>
                     <Switch>
-                        <Redirect to={`/hello-world`} from={`/`} exact />
+                        {
+                        redirectTo && <Redirect to={`/${redirectTo}`} from={`/`} exact />
+                        }
                         <Route path="/edit/:id" component={Editor} />
                         <Route component={Preview} />
                     </Switch>
