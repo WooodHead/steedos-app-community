@@ -47,11 +47,15 @@ export default inject('store')(
         }
 
         function renderAside() {
-            const navigations = store.pages.map(item => ({
-                label: item.label,
-                path: `/${item.path}`,
-                icon: item.icon
-            }));
+            let navigations: Array<any> = []
+            store.pages.forEach(item => (
+                navigations.push({
+                    label: item.label,
+                    path: `/${item.path}`,
+                    icon: item.icon,
+                    pageId: item.id
+                })));
+            console.log('navigations', navigations);
             const paths = navigations.map(item => item.path);
 
             return (
@@ -108,7 +112,7 @@ export default inject('store')(
                                     onClick={(e: React.MouseEvent) => {
                                         e.preventDefault();
                                         confirm('确认要删除').then(confirmed => {
-                                            confirmed && store.removePageAt(paths.indexOf(link.path));
+                                            confirmed && store.removePageAt(link.pageId);
                                         });
                                     }}
                                 />
@@ -122,7 +126,7 @@ export default inject('store')(
                                 className={'navbtn fa fa-pencil'}
                                 onClick={(e: React.MouseEvent) => {
                                     e.preventDefault();
-                                    history.push(`/edit/${paths.indexOf(link.path)}`);
+                                    history.push(`/edit/${link.pageId}`);
                                 }}
                             />
                         );
@@ -157,15 +161,24 @@ export default inject('store')(
         }
 
         function handleConfirm(value: {label: string; icon: string; path: string}) {
-            store.addPage({
-                ...value,
-                schema: {
-                    type: 'page',
-                    title: value.label,
-                    body: '这是你刚刚新增的页面。'
-                }
-            });
+            console.log('TODO odata create...');
+            // store.addPage({
+            //     ...value,
+            //     schema: {
+            //         type: 'page',
+            //         title: value.label,
+            //         body: '这是你刚刚新增的页面。'
+            //     }
+            // });
             store.setAddPageIsOpen(false);
+        }
+
+        function getPages() {
+            let pages: Array<any> = [];
+            store.pages.forEach(item => (
+                pages.push(item)
+            ));
+            return pages;
         }
 
         return (
@@ -176,7 +189,7 @@ export default inject('store')(
                 offScreen={store.offScreen}
             >
                 <Switch>
-                    {store.pages.map(item => (
+                    {getPages().map(item => (
                         <Route
                             key={item.id}
                             path={`/${item.path}`}
@@ -189,7 +202,7 @@ export default inject('store')(
                     show={store.addPageIsOpen}
                     onClose={() => store.setAddPageIsOpen(false)}
                     onConfirm={handleConfirm}
-                    pages={store.pages.concat()}
+                    pages={getPages()}
                 />
             </Layout>
         );

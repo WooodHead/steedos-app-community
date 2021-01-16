@@ -9,9 +9,9 @@ const Editor = React.lazy(() => import('./Editor'));
 
 export default observer(function({store}: {store: IMainStore}) {
     let redirectTo = '';
-    if(store.pages.length > 0){
-        redirectTo = store.pages[0].path
-    }
+    store.pages.forEach(function(value, key){
+        redirectTo = value.path
+    })
     console.log('redirectTo', redirectTo);
     return (
         <Router>

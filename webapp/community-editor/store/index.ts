@@ -1,22 +1,9 @@
 import {types, getEnv, applySnapshot, getSnapshot, flow} from 'mobx-state-tree';
 import {PageStore} from './Page';
 import {when, reaction} from 'mobx';
-let pagIndex = 0;
 export const MainStore = types
     .model('MainStore', {
-        pages: types.optional(types.array(PageStore), [
-            // {
-            //     id: `${pagIndex}`,
-            //     path: 'hello-world',
-            //     label: 'Hello world',
-            //     icon: 'fa fa-file',
-            //     schema: {
-            //         type: 'page',
-            //         title: 'Hello world',
-            //         body: '初始页面'
-            //     }
-            // }
-        ]),
+        pages: types.optional(types.map(PageStore), {}),
         theme: 'default',
         asideFixed: true,
         asideFolded: false,
@@ -57,21 +44,20 @@ export const MainStore = types
             self.addPageIsOpen = isOpened;
         }
 
-        function addPage(data: {label: string; path: string; icon?: string; schema?: any}) {
-            self.pages.push(
-                PageStore.create({
-                    ...data,
-                    id: `${++pagIndex}`
-                })
-            );
+        function addPage(data: {id: string, label: string; path: string; icon?: string; schema?: any}) {
+            self.pages.set(data.id, PageStore.create({
+                ...data
+            }))
         }
 
-        function removePageAt(index: number) {
-            self.pages.splice(index, 1);
+        function removePageAt(id: string) {
+            // self.pages.splice(index, 1);
+            self.pages.delete(id)
         }
 
         function updatePageSchemaAt(index: number) {
-            self.pages[index].updateSchema(self.schema);
+            // self.pages[index].updateSchema(self.schema);
+            console.log('self.pages[index]222222222222', self.schema);
         }
 
         function updateSchema(value: any) {
@@ -92,7 +78,36 @@ export const MainStore = types
             setAddPageIsOpen,
             addPage,
             removePageAt,
-            updatePageSchemaAt,
+            updatePageSchemaAt: flow(function* updatePageSchemaAt(id) { // <- note the star, this a generator function!
+                try {
+                    // ... yield can be used in async/await style
+                    const response = yield getEnv(self).fetcher({
+                        url: 'http://127.0.0.1:8088/api/v4/community_page/'+id,
+                        method: 'put',
+                        data: {
+                            $set: {
+                                schema: JSON.stringify(self.schema)
+                            }
+                        }
+                    })
+
+                    const page = response.data;
+                    addPage({
+                        icon: "",
+                        id: id,
+                        path: page.url,
+                        label: page.label,
+                        schema: {
+                            type: 'page',
+                            title: page.title,
+                            body: '这是你刚刚新增的页面' + id
+                        }
+                    })
+                } catch (error) {
+                    // ... including try/catch error handling
+                    console.error("Failed to fetch projects", error)
+                }
+            }),
             updateSchema,
             setPreview,
             setIsMobile,
@@ -105,15 +120,28 @@ export const MainStore = types
                     })
 
                     const page = response.data;
+
+
+                    let schema = {
+                        type: 'page',
+                        title: page.title,
+                        body: '这是你刚刚新增的页面'
+                    }
+
+                    if(page.schema){
+                        try {
+                            schema = JSON.parse(page.schema)
+                        } catch (error) {
+                            console.error(error)
+                        }
+                    }
+
                     addPage({
                         icon: "",
+                        id: id,
                         path: page.url,
                         label: page.label,
-                        schema: {
-                            type: 'page',
-                            title: page.title,
-                            body: '这是你刚刚新增的页面' + id
-                        }
+                        schema: schema
                     })
                 } catch (error) {
                     // ... including try/catch error handling

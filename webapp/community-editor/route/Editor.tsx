@@ -7,7 +7,7 @@ import {Layout, Switch, classnames as cx, toast} from 'amis';
 import '../renderer/MyRenderer';
 import '../editor/MyRenderer';
 
-let currentIndex = -1;
+let currentIndex = '-1';
 
 let host = `${window.location.protocol}//${window.location.host}`;
 let iframeUrl = '/editor.html';
@@ -25,11 +25,11 @@ __uri('amis/schema.json');
 
 export default inject('store')(
     observer(function ({store, location, history, match}: {store: IMainStore} & RouteComponentProps<{id: string}>) {
-        const index: number = parseInt(match.params.id, 10);
+        const index: string = match.params.id;
 
         if (index !== currentIndex) {
             currentIndex = index;
-            store.updateSchema(store.pages[index].schema);
+            store.updateSchema(store.pages.get(index)?.schema);
         }
 
         function save() {
@@ -38,7 +38,7 @@ export default inject('store')(
         }
 
         function exit() {
-            history.push(`/${store.pages[index].path}`);
+            history.push(`/${store.pages.get(index)?.path}`);
         }
 
         function renderHeader() {
