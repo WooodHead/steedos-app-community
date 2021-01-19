@@ -20,8 +20,8 @@ options:
     value: MenuLabel
   - label: Navigational Topic
     value: NavigationalTopic
-  - label: Salesforce Object
-    value: SalesforceObject
+  - label: Steedos Object
+    value: SteedosObject
   - label: System Link
     value: SystemLink
 readonly: false
