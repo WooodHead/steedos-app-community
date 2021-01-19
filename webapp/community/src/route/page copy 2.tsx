@@ -14,7 +14,7 @@ import {inject, observer} from 'mobx-react';
 import {IMainStore} from '../store';
 import {RouteComponentProps} from 'react-router-dom';
 import {Layout, Switch, classnames as cx} from 'amis';
-import Navigation from '../component/navigation';
+
 // amis 环境配置
 const env = {
     // 下面三个接口必须实现
@@ -102,35 +102,18 @@ const env = {
 
 export default inject('store')(
     observer(function ({store, location, history, match}: {store: IMainStore} & RouteComponentProps<{id: string}>) {
-        const pagePath: string = match.params.id;
-        console.log('index', pagePath);
+        const index: string = match.params.id;
         let pageSchema: any = {};
-        let navigations: Array<any> = [];
         store.communities.forEach(function(value, key){
-            const page = value.pages.find(function(_page){
-                return _page.path === pagePath
-            })
-            navigations = value.navigations;
-            pageSchema = JSON.parse(page?.schema || "{}");
-            // pageSchema = JSON.parse(value.related__community_page[0].schema)
+            pageSchema = JSON.parse(value.pages[0].schema)
         })
-        console.log('navigations 117', navigations.length);    
-        navigations.map((element: any) =>{
-            console.log('navigations element', element);    
-        })
-        console.log('navigations 118', navigations.concat());    
-        return (
-            <div>
-                <Navigation navigations={navigations} history={history}></Navigation>
-                {renderAmis(
-                    // 这里是 amis 的 Json 配置。
-                    pageSchema,
-                    {
-                        // props...
-                    },
-                    env
-                )}
-            </div>
+        return renderAmis(
+            // 这里是 amis 的 Json 配置。
+            pageSchema,
+            {
+                // props...
+            },
+            env
         );
     })
 );

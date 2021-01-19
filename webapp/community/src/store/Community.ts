@@ -1,5 +1,6 @@
 import {types, getEnv} from 'mobx-state-tree';
 import {PageStore} from './Page';
+import {NavigationalStore} from './navigational'
 export const CommunityStore = types
     .model('Community', {
         _id: types.string,
@@ -7,7 +8,8 @@ export const CommunityStore = types
         description: types.maybeNull(types.string),
         url: types.maybeNull(types.string),
         active: types.maybeNull(types.boolean),
-        related__community_page: types.optional(types.array(PageStore), [])
+        pages: types.optional(types.array(PageStore), []),
+        navigations: types.optional(types.array(NavigationalStore), [])
     })
     .views(self => ({}))
     .actions(self => ({}));

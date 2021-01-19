@@ -9,8 +9,8 @@ const Page = React.lazy(() => import('./page'));
 export default observer(function({store}: {store: IMainStore}) {
     let redirectTo = '';
     store.communities.forEach(function(value, key){
-        console.log('value', value.related__community_page[0]);
-        redirectTo = value.related__community_page[0].path
+        console.log('value', value.pages[0]);
+        redirectTo = value.pages[0].path
     })
     console.log('redirectTo', redirectTo);
     return (

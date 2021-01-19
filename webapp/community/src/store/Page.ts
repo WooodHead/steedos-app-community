@@ -5,7 +5,7 @@ export const PageStore = types
         icon: '',
         path: '',
         label: '',
-        schema: types.string
+        schema: types.maybeNull(types.string)
     })
     .views(self => ({}))
     .actions(self => {
