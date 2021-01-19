@@ -4,6 +4,7 @@ export const NavigationalMenuStore = types
     .model('NavigationalMenu', {
         _id: types.identifier,
         name: '',
+        sort: types.number,
         url: types.maybeNull(types.string),
         type: types.maybeNull(types.string),
         page: types.maybeNull(PageStore),

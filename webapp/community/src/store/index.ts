@@ -108,6 +108,7 @@ export const MainStore = types
                                             title
                                         },
                                         event,
+                                        sort
                                     }
                                   }
                                 }

@@ -56,7 +56,7 @@ class Navigation extends React.Component {
                         </div>
                     </div>
                     <div className="flex flex-col md:flex-row hidden md:block -mx-2">
-                        {(this.props as any).navigations[0].menus.map((element: any) => (
+                        {(this.props as any).navigations[0].menus.concat().sort(function(a:any,b:any){return a.sort - b.sort;}).map((element: any) => (
                             <a key={element._id} href="javascript:void(0)" onClick={e => this.clickMenu(element)} className="text-gray-800 rounded hover:bg-gray-900 hover:text-gray-100 hover:font-medium py-2 px-2 md:mx-2">{element.name}</a>
                         ))}
                     </div>
