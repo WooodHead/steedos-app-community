@@ -1,26 +1,26 @@
 import React from 'react';
 import {RendererEditor, BasicEditor} from 'amis-editor';
 
-@RendererEditor('my-renderer', {
-    name: '自定义渲染器',
-    description: '这只是个示例',
+@RendererEditor('steedos-object-crud-renderer', {
+    name: 'Steedos Object CRUD name',
+    description: 'Steedos Object CRUD description',
     // docLink: '/docs/renderers/Nav',
-    type: 'my-renderer',
+    type: 'steedos-object-crud-renderer',
     previewSchema: {
         // 用来生成预览图的
-        type: 'my-renderer',
+        type: 'steedos-object-crud-renderer',
         target: 'demo'
     },
     scaffold: {
         // 拖入组件里面时的初始数据
-        type: 'my-renderer',
+        type: 'steedos-object-crud-renderer',
         target: '233'
     }
 })
-export default class MyRendererEditor extends BasicEditor {
-    tipName = '自定义组件';
+export default class SteedosObjectCRUD extends BasicEditor {
+    tipName = 'Steedos Object CRUD';
     settingsSchema = {
-        title: '自定义组件配置',
+        title: 'Steedos Object CRUD',
         controls: [
             {
                 type: 'tabs',
@@ -32,8 +32,18 @@ export default class MyRendererEditor extends BasicEditor {
                         title: '常规',
                         controls: [
                             {
-                                name: 'target',
-                                label: 'Target',
+                                name: 'limit',
+                                label: '记录数',
+                                type: 'number'
+                            },
+                            {
+                                name: 'object_name',
+                                label: '对象名',
+                                type: 'text'
+                            },
+                            {
+                                name: 'list_view',
+                                label: '默认列表视图',
                                 type: 'text'
                             }
                         ]
@@ -42,8 +52,8 @@ export default class MyRendererEditor extends BasicEditor {
                     {
                         title: '外观',
                         controls: [{
-                            name: 'sobject',
-                            label: 'Steedos Object',
+                            name: 'className',
+                            label: 'className',
                             type: 'text'
                         }]
                     }

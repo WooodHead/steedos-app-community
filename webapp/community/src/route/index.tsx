@@ -4,6 +4,10 @@ import {Route, Switch, Redirect, HashRouter as Router} from 'react-router-dom';
 import {observer} from 'mobx-react';
 import {IMainStore} from '../store';
 
+
+import '../renderer/MyRenderer';
+import '../renderer/SteedosObjectCRUDRenderer';
+
 const Page = React.lazy(() => import('./page'));
 
 export default observer(function({store}: {store: IMainStore}) {

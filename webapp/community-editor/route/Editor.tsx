@@ -7,6 +7,9 @@ import {Layout, Switch, classnames as cx, toast} from 'amis';
 import '../renderer/MyRenderer';
 import '../editor/MyRenderer';
 
+import '../renderer/SteedosObjectCRUDRenderer';
+import '../editor/SteedosObjectCRUD';
+
 let currentIndex = '-1';
 
 let host = `${window.location.protocol}//${window.location.host}`;
