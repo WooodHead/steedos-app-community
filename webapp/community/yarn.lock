@@ -232,6 +232,11 @@
     lodash.isundefined "^3.0.1"
     lodash.uniq "^4.5.0"
 
+"@headlessui/react@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.npm.taobao.org/@headlessui/react/download/@headlessui/react-0.2.0.tgz#a31f90892d736243ba91c1474f534b3256d0c538"
+  integrity sha1-ox+QiS1zYkO6kcFHT1NLMlbQxTg=
+
 "@jest/types@^26.6.2":
   version "26.6.2"
   resolved "https://registry.npm.taobao.org/@jest/types/download/@jest/types-26.6.2.tgz#bef5a532030e1d88a2f5a6d933f84e97226ed48e"

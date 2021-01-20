@@ -13,8 +13,9 @@ import { toast } from 'amis/lib/components/Toast';
 import {inject, observer} from 'mobx-react';
 import {IMainStore} from '../store';
 import {RouteComponentProps} from 'react-router-dom';
-import {Layout, Switch, classnames as cx} from 'amis';
+// import {Layout, Switch, classnames as cx} from 'amis';
 import Navigation from '../component/navigation';
+import Layout from '../component/layout';
 // amis 环境配置
 const env = {
     // 下面三个接口必须实现
@@ -121,15 +122,16 @@ export default inject('store')(
         console.log('navigations 118', navigations.concat());    
         return (
             <div>
-                <Navigation navigations={navigations} history={history}></Navigation>
-                {renderAmis(
-                    // 这里是 amis 的 Json 配置。
-                    pageSchema,
-                    {
-                        // props...
-                    },
-                    env
-                )}
+                <Layout navigations={navigations} history={history}>
+                    {renderAmis(
+                        // 这里是 amis 的 Json 配置。
+                        pageSchema,
+                        {
+                            // props...
+                        },
+                        env
+                    )}
+                </Layout>
             </div>
         );
     })
