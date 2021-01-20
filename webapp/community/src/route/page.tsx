@@ -105,12 +105,14 @@ export default inject('store')(
     observer(function ({store, location, history, match}: {store: IMainStore} & RouteComponentProps<{id: string}>) {
         const pagePath: string = match.params.id;
         console.log('index', pagePath);
+        let logo: any = '';
         let pageSchema: any = {};
         let navigations: Array<any> = [];
         store.communities.forEach(function(value, key){
             const page = value.pages.find(function(_page){
                 return _page.path === pagePath
             })
+            logo = value.logo;
             navigations = value.navigations;
             pageSchema = JSON.parse(page?.schema || "{}");
             // pageSchema = JSON.parse(value.related__community_page[0].schema)
@@ -122,7 +124,7 @@ export default inject('store')(
         console.log('navigations 118', navigations.concat());    
         return (
             <div>
-                <Layout navigations={navigations} history={history}>
+                <Layout navigations={navigations} history={history} logo={`http://127.0.0.1:8088/api/files/images/${logo}`} userInfo={store.userInfo}>
                     {renderAmis(
                         // 这里是 amis 的 Json 配置。
                         pageSchema,

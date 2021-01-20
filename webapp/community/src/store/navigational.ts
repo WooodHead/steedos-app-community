@@ -1,5 +1,5 @@
 import {types, getEnv} from 'mobx-state-tree';
-import {NavigationalMenuStore} from './navigational_menu';
+import {NavigationalMenuStore} from './Navigational_menu';
 export const NavigationalStore = types
     .model('Navigational', {
         _id: types.identifier,

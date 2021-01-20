@@ -1,9 +1,11 @@
 import {types, getEnv, applySnapshot, getSnapshot, flow} from 'mobx-state-tree';
 import {CommunityStore} from './Community';
 import {when, reaction} from 'mobx';
+import { UserInfoStore } from './UserInfo';
 export const MainStore = types
     .model('MainStore', {
         communities: types.optional(types.array(CommunityStore), []),
+        userInfo: types.optional(UserInfoStore, {}),
         theme: 'default',
         asideFixed: true,
         asideFolded: false,
@@ -61,6 +63,18 @@ export const MainStore = types
         function setIsMobile(value: boolean) {
             self.isMobile = value;
         }
+
+        function getCookie(cname: any){
+            var name = cname + "=";
+            var ca = document.cookie.split(';');
+            for(var i=0; i<ca.length; i++) 
+            {
+                var c = ca[i].trim();
+                if (c.indexOf(name)==0) return c.substring(name.length,c.length);
+            }
+            return "";
+        }
+
         return {
             toggleAsideFolded,
             toggleAsideFixed,
@@ -83,6 +97,7 @@ export const MainStore = types
                                 community(filters:"_id eq ${_id}"){
                                   _id
                                   name
+                                  logo
                                   description
                                   url
                                   active
@@ -131,7 +146,11 @@ export const MainStore = types
                 if(typeof window !== 'undefined'){
                     const search  = new URLSearchParams(window.location.search);
                     const pageId = search.get('id');
-                    (self as any).fetchPage(pageId)
+                    (self as any).fetchPage(pageId);
+
+                    const userId = getCookie('X-User-Id');
+                    applySnapshot(self, {userInfo: UserInfoStore.create({_id: userId, avatar: `http://127.0.0.1:8088/avatar/${userId}`})})
+
                 }
             }
         };
