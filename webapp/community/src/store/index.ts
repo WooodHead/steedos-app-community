@@ -99,6 +99,7 @@ export const MainStore = types
                                     menus: related__community_navigation_menu{
                                         _id,
                                         url,
+                                        icon,
                                         type,
                                         name,
                                         page {

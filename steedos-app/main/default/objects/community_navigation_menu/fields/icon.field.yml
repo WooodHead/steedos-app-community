@@ -1,0 +1,17 @@
+name: icon
+filterable: false
+group: 可选
+hidden: false
+index: false
+inlineHelpText: 'https://heroicons.com/'
+is_name: false
+is_wide: true
+label: Icon
+omit: false
+readonly: false
+required: false
+rows: 3
+searchable: false
+sort_no: 200
+sortable: false
+type: textarea

@@ -5,6 +5,7 @@ export const NavigationalMenuStore = types
         _id: types.identifier,
         name: '',
         sort: types.number,
+        icon: types.maybeNull(types.string), 
         url: types.maybeNull(types.string),
         type: types.maybeNull(types.string),
         page: types.maybeNull(PageStore),
