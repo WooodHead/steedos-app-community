@@ -1,5 +1,5 @@
 import React from 'react';
-import { ToastComponent, AlertComponent, Spinner, Layout } from 'amis';
+import {ToastComponent, AlertComponent, Spinner} from 'amis';
 import {Route, Switch, Redirect, HashRouter as Router} from 'react-router-dom';
 import {observer} from 'mobx-react';
 import {IMainStore} from '../store';
@@ -9,6 +9,7 @@ import '../renderer/MyRenderer';
 import '../renderer/SteedosObjectCRUDRenderer';
 
 const Page = React.lazy(() => import('./page'));
+const LoginPage = React.lazy(() => import('./loginPage'));
 
 export default observer(function({store}: {store: IMainStore}) {
     let redirectTo = '';
@@ -27,6 +28,7 @@ export default observer(function({store}: {store: IMainStore}) {
                         {
                         redirectTo && <Redirect to={`/${redirectTo}`} from={`/`} exact />
                         }
+                        <Route path="/login" component={LoginPage} />
                         <Route path="/:id" component={Page} />
                     </Switch>
                 </React.Suspense>

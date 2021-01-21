@@ -1,7 +1,7 @@
 import {types, getEnv} from 'mobx-state-tree';
 export const PageStore = types
     .model('Page', {
-        _id: types.identifier,
+        _id: types.maybeNull(types.string),
         icon: '',
         path: '',
         label: '',
