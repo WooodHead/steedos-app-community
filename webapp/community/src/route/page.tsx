@@ -104,7 +104,6 @@ const env = {
 export default inject('store')(
     observer(function ({store, location, history, match}: {store: IMainStore} & RouteComponentProps<{id: string}>) {
         const pagePath: string = match.params.id;
-        console.log('index', pagePath);
         let logo: any = '';
         let pageSchema: any = {};
         let navigations: Array<any> = [];
@@ -117,11 +116,6 @@ export default inject('store')(
             pageSchema = JSON.parse(page?.schema || "{}");
             // pageSchema = JSON.parse(value.related__community_page[0].schema)
         })
-        console.log('navigations 117', navigations.length);    
-        navigations.map((element: any) =>{
-            console.log('navigations element', element);    
-        })
-        console.log('navigations 118', navigations.concat());    
         return (
             <div>
                 <Layout navigations={navigations} history={history} logo={`http://127.0.0.1:8088/api/files/images/${logo}`} userInfo={store.userInfo}>

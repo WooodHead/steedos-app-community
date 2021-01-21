@@ -1,5 +1,5 @@
 import React from 'react';
-import {ToastComponent, AlertComponent, Spinner} from 'amis';
+import { ToastComponent, AlertComponent, Spinner, Layout } from 'amis';
 import {Route, Switch, Redirect, HashRouter as Router} from 'react-router-dom';
 import {observer} from 'mobx-react';
 import {IMainStore} from '../store';

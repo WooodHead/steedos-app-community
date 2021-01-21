@@ -2,6 +2,7 @@ import {types, getEnv, applySnapshot, getSnapshot, flow} from 'mobx-state-tree';
 import {CommunityStore} from './Community';
 import {when, reaction} from 'mobx';
 import { UserInfoStore } from './UserInfo';
+import { SteedosClient } from '@steedos/client';
 export const MainStore = types
     .model('MainStore', {
         communities: types.optional(types.array(CommunityStore), []),
@@ -47,10 +48,12 @@ export const MainStore = types
         }
 
         function addCommunity(data: any) {
-            console.log('addCommunity', data);
             self.communities.push(data)
         }
 
+        function setUserInfo(data: any) {
+            self.userInfo = UserInfoStore.create({...data, avatar: `http://127.0.0.1:8088/avatar/${data.userId}`})
+        }
 
         function updateSchema(value: any) {
             self.schema = value;
@@ -141,15 +144,44 @@ export const MainStore = types
                     console.error("Failed to fetch projects", error)
                 }
             }),
+            fetchUserInfo: flow(function* fetchPage() { // <- note the star, this a generator function!
+                try {
+                    // ... yield can be used in async/await style
+                    const response = yield getEnv(self).fetcher({
+                        url: 'http://127.0.0.1:8088/accounts/user',
+                        method: 'get'
+                    })
+                    const userInfo = response.data;
+                    setUserInfo(userInfo);
+                } catch (error) {
+                    // ... including try/catch error handling
+                    console.error("Failed to fetch projects", error)
+                }
+            }),
             afterCreate() {
                 console.log('afterCreate....');
                 if(typeof window !== 'undefined'){
-                    const search  = new URLSearchParams(window.location.search);
-                    const pageId = search.get('id');
-                    (self as any).fetchPage(pageId);
+
+                    (window as any).SteedosClient = new SteedosClient();
+
+                    (window as any).SteedosClient.setUrl('http://127.0.0.1:8088');
+
+                    (window as any).SteedosLogin = function(){
+                        (window as any).SteedosClient.login(document.getElementsByName('email')[0].value, document.getElementsByName('password')[0].value)
+                    };
 
                     const userId = getCookie('X-User-Id');
-                    applySnapshot(self, {userInfo: UserInfoStore.create({_id: userId, avatar: `http://127.0.0.1:8088/avatar/${userId}`})})
+
+                    if(!userId){
+                        window.location.href = "http://127.0.0.1:8088/accounts/a/#/login?redirect_uri="+ window.location.href;
+                    }else{
+                        (self as any).fetchUserInfo();
+                        // applySnapshot(self, {userInfo: UserInfoStore.create({_id: userId, avatar: `http://127.0.0.1:8088/avatar/${userId}`})})
+                        const search  = new URLSearchParams(window.location.search);
+                        const pageId = search.get('id');
+                        (self as any).fetchPage(pageId);
+                    }
+                    
 
                 }
             }

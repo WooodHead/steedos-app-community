@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Navigation from './navigation';
 import { Transition } from '@headlessui/react'
+
 class Layout extends React.Component {
 
     static propTypes = {
@@ -29,6 +30,16 @@ class Layout extends React.Component {
                 })
                 break;
             case 'Event':
+                switch (menu.event) {
+                    case 'Login':
+                        window.location.href = "http://127.0.0.1:8088/accounts/a/#/login?redirect_uri="+ window.location.href;
+                        break;
+                    case 'Logout':
+                        window.location.href = "http://127.0.0.1:8088/accounts/a/#/logout?redirect_uri="+ window.location.href;
+                        break;
+                    default:
+                        break;
+                }
                 break;
             case 'ExternalLink':
                 window.open(menu.url);
@@ -53,14 +64,29 @@ class Layout extends React.Component {
         return (
             <div>
                 <div className="h-screen flex overflow-hidden bg-white">
-                <Transition show={isOpen}>
+                    <Transition show={isOpen}>
                     <div className="md:hidden">
                         <div className="fixed inset-0 flex z-40">
-                            
-                            <div className="fixed inset-0">
-                                <div className="absolute inset-0 bg-gray-600 opacity-75"></div>
-                            </div>
-                            <div className="relative flex-1 flex flex-col max-w-xs w-full bg-white">
+                        <Transition show={isOpen}
+                            enter="transition-opacity ease-linear duration-300"
+                            enterFrom="opacity-0"
+                            enterTo="opacity-100"
+                            leave="transition-opacity ease-linear duration-300"
+                            leaveFrom="opacity-100"
+                            leaveTo="opacity-0"
+                            className="fixed inset-0"
+                        >
+                            <div className="absolute inset-0 bg-gray-600 opacity-75"></div>
+                        </Transition>
+                        <Transition show={isOpen}
+                            enter="transition ease-in-out duration-300 transform"
+                            enterFrom="-translate-x-full"
+                            enterTo="translate-x-0"
+                            leave="transition ease-in-out duration-300 transform"
+                            leaveFrom="translate-x-0"
+                            leaveTo="-translate-x-full"
+                            className="relative flex-1 flex flex-col max-w-xs w-full bg-white"
+                        >
                                 <div className="absolute top-0 right-0 -mr-12 pt-2">
                                     <button onClick={() => this.setIsOpen(!isOpen)} className="ml-1 flex items-center justify-center h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
                                         <span className="sr-only">Close sidebar</span>
@@ -78,21 +104,21 @@ class Layout extends React.Component {
 
                                     {(this.props as any).navigations[0].menus.concat().sort(function(a:any,b:any){return a.sort - b.sort;}).map((element: any) => (
                                         <a key={element._id} href="javascript:void(0)" onClick={e => this.clickMenu(element)} className="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-2 py-2 text-base font-medium rounded-md">
-                                            {element.icon}
+                                            {element.icon && <div className="text-gray-500 mr-3 h-6 w-6" dangerouslySetInnerHTML={{__html: element.icon}} />}
                                             {element.name}
                                         </a>
                                     ))}
                                     </nav>
                                 </div>
                                 <div className="flex-shrink-0 flex border-t border-gray-200 p-4">
-                                    <a href="#" className="flex-shrink-0 group block">
+                                    <a href="javascript:void(0)" className="flex-shrink-0 group block">
                                         <div className="flex items-center">
                                             <div>
                                                 <img className="inline-block h-10 w-10 rounded-full" src={userInfo.avatar} />
                                             </div>
                                             <div className="ml-3">
                                                 <p className="text-base font-medium text-gray-700 group-hover:text-gray-900">
-                                                    {userInfo._id}
+                                                    {userInfo.name}
                                                 </p>
                                                 <p className="text-sm font-medium text-gray-500 group-hover:text-gray-700">
                                                     View profile
@@ -101,12 +127,12 @@ class Layout extends React.Component {
                                         </div>
                                     </a>
                                 </div>
-                            </div>
                            
-                            
+                            </Transition>
                             <div className="flex-shrink-0 w-14">
 
                             </div>
+                            
                         </div>
                     </div>
                     </Transition>
@@ -136,7 +162,7 @@ class Layout extends React.Component {
                                             </div>
                                             <div className="ml-3">
                                                 <p className="text-sm font-medium text-gray-700 group-hover:text-gray-900">
-                                                    {userInfo._id}
+                                                    {userInfo.name}
                                                 </p>
                                                 <p className="text-xs font-medium text-gray-500 group-hover:text-gray-700">
                                                     View profile
