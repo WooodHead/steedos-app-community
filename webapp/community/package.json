@@ -49,6 +49,7 @@
     "@snowpack/plugin-dotenv": "^2.0.5",
     "@snowpack/plugin-react-refresh": "^2.3.8",
     "@snowpack/plugin-typescript": "^1.1.1",
+    "@types/jquery": "^3.5.5",
     "@types/react-dom": "^16.8.4",
     "@types/react-router-dom": "^4.3.2",
     "@vue/compiler-sfc": "^3.0.4",

@@ -189,11 +189,11 @@ export const MainStore = types
 
                     (window as any).SteedosClient.setUrl('http://127.0.0.1:8088');
                     (window as any).SteedosLogin = function(){
-                        (window as any).SteedosClient.login(document.getElementById('email')?.value || document.getElementsByName('email')[0].value, document.getElementById('password')?.value || document.getElementsByName('password')[0].value).then((result) => {
+                        (window as any).SteedosClient.login($('#email').val() || $("[name='email']").val(), $('#password').val() || $("[name='password']").val()).then((result: any) => {
                             console.log('result', result);
                             (self as any).saveUserInfo(result.user);
                             window.location.href = '/';
-                        }).catch((err) => {
+                        }).catch((err:any) => {
                             console.log('err', err);
                             $('#loginFormErrorInfo').remove();
                             $("form").append(`
