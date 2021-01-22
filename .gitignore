@@ -3,3 +3,5 @@ node_modules/*
 .env.local
 storage/*
 public/community/*
+public/community-editor/*
+public/gh-pages/*

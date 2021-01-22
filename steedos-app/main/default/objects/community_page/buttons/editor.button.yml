@@ -1,5 +1,5 @@
 name: editor
 is_enable: true
-label: 设计页面2
+label: 设计页面
 'on': record
 visible: true
