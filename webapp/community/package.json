@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@headlessui/react": "^0.2.0",
-    "@steedos/client": "1.23.0-alpha.18",
+    "@steedos/client": "^1.23.0-alpha.19",
     "@types/jest": "^26.0.15",
     "@types/node": "^12.19.5",
     "@types/react-dom": "^16.9.9",
