@@ -1,0 +1,16 @@
+name: public
+filterable: false
+group: 公开访问权限
+hidden: false
+index: false
+inlineHelpText: 在您启用公开访问时，默认情况下，我们可让来宾用户在公共页面上查看资产文件。您可在“管理 | 首选项”中调整此设置。
+is_name: false
+is_wide: false
+label: 公众可以访问社区
+omit: false
+readonly: false
+required: false
+searchable: false
+sort_no: 160
+sortable: false
+type: boolean
