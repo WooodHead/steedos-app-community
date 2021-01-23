@@ -120,16 +120,14 @@ export const MainStore = types
             updateSchema,
             setPreview,
             setIsMobile,
-            saveUserInfo:flow(function* saveUserInfo(userInfo) { // <- note the star, this a generator function!
+            saveUserInfo:flow(function* saveUserInfo(userInfo) {
                 setUserInfo(userInfo);
             }),
-            fetchCommunity: flow(function* fetchCommunity(id) { // <- note the star, this a generator function!
+            fetchCommunity: flow(function* fetchCommunity(communityPath) {
                 try {
-                    let _id = 'YsSAi43ZHEJs5L79i';
-                    // ... yield can be used in async/await style
                     const response = yield steedosClient.graphql.query(`
                     {
-                        community(filters:"_id eq ${_id}"){
+                        community(filters:"path eq ${communityPath}"){
                           _id
                           name
                           logo
@@ -234,9 +232,13 @@ export const MainStore = types
                         window.location.href = "/#/login";
                     }else{
                         (self as any).fetchUserInfo();
-                        const search  = new URLSearchParams(window.location.search);
-                        const pageId = search.get('id');
-                        (self as any).fetchCommunity(pageId);
+                        try {
+                            const communityPath = (window as any).location.href.split("#")[1].split('/')[1];
+                            (self as any).fetchCommunity(communityPath);
+                        } catch (error) {
+                            
+                        }
+                        
                     }
                 }
             }
