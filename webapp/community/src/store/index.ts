@@ -39,6 +39,9 @@ export const MainStore = types
             //TODO
             return values(self.communities)?.length > 0 ? values(self.communities)[0] : null
         },
+        get routerBasename(){
+            return values(self.communities)?.length > 0 ? `/${values(self.communities)[0].path}` : undefined
+        },
         get navigations(){
             return values(self.communities)?.length > 0 ? values(self.communities)[0].navigations : null
         },
@@ -132,6 +135,7 @@ export const MainStore = types
                                   logo
                                   description
                                   url
+                                  path
                                   active
                                   pages:related__community_page{
                                     _id,

@@ -7,6 +7,7 @@ export const CommunityStore = types
         name: types.string,
         logo: types.maybeNull(types.string),
         description: types.maybeNull(types.string),
+        path: types.string,
         url: types.maybeNull(types.string),
         active: types.maybeNull(types.boolean),
         pages: types.optional(types.array(PageStore), []),
