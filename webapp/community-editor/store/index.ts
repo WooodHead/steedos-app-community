@@ -57,7 +57,7 @@ export const MainStore = types
 
         function updatePageSchemaAt(index: number) {
             // self.pages[index].updateSchema(self.schema);
-            console.log('self.pages[index]222222222222', self.schema);
+            console.log('self.pages[index]', self.schema);
         }
 
         function updateSchema(value: any) {
