@@ -32,7 +32,7 @@ export default inject('store')(
                             <span className="hidden-folded m-l-sm">AMIS 编辑器</span>
                         </div>
                     </div>
-                    <div className={`a-Layout-headerBar`}>
+                    {/* <div className={`a-Layout-headerBar`}>
                         <div className="hidden-xs p-t-sm pull-right">
                             <Button size="sm" className="m-r-xs" level="success" disabled disabledTip="Todo...">
                                 全部导出
@@ -41,7 +41,7 @@ export default inject('store')(
                                 新增页面
                             </Button>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             );
         }
