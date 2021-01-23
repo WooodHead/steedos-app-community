@@ -12,7 +12,7 @@ router.get('/api/community/public/:communityPath/:pagePath', async function (req
         //TODO 此处应该返回public page。
         const pages = await objectql.getObject('community_page').find({filters: [['community','=', community._id], ['path','=', pagePath]]});
         if(pages.length > 0){
-            res.status(200).send(pages[0]);
+            return res.status(200).send(pages[0]);
         }
     }
     res.status(500).send({ error: 'not find page' });

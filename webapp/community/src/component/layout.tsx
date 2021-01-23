@@ -22,41 +22,7 @@ class Layout extends React.Component {
 
     clickMenu = (menu: any)=>{
         const {history} = (this.props as any);
-        console.log('navigation===', menu.type, menu)
-        switch (menu.type) {
-            case 'InternalLink':
-                history.push({
-                    pathname: menu.page.path,
-                })
-                break;
-            case 'Event':
-                switch (menu.event) {
-                    case 'Login':
-                        window.location.href = "http://127.0.0.1:8088/accounts/a/#/login?redirect_uri="+ window.location.href;
-                        break;
-                    case 'Logout':
-                        window.location.href = "http://127.0.0.1:8088/accounts/a/#/logout?redirect_uri="+ window.location.href;
-                        break;
-                    default:
-                        break;
-                }
-                break;
-            case 'ExternalLink':
-                window.open(menu.url);
-                break;
-            case 'GlobalAction':
-                break;
-            case 'MenuLabel':
-                break;
-            case 'NavigationalTopic':
-                break;
-            case 'SteedosObject':
-                break;
-            case 'SystemLink':
-                break;
-            default:
-                break;
-        }
+        menu.click(history);
     }
     render() {
         const { isOpen } = this.state

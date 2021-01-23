@@ -5,6 +5,7 @@ import {when, reaction, $mobx} from 'mobx';
 import { UserInfoStore } from './UserInfo';
 import { SteedosClient } from '@steedos/client';
 import { PageStore } from './Page';
+export const steedosClient = new SteedosClient();
 export const MainStore = types
     .model('MainStore', {
         communities: types.optional(types.array(CommunityStore), []),
@@ -17,7 +18,7 @@ export const MainStore = types
         addPageIsOpen: false,
         preview: false,
         isMobile: false,
-        schema: types.frozen()
+        schema: types.frozen(),
     })
     .views(self => ({
         get fetcher() {
@@ -32,8 +33,11 @@ export const MainStore = types
         get copy() {
             return getEnv(self).copy;
         },
+        get rootUrl(){
+            return getEnv(self).rootUrl();
+        },
         get logo() {
-            return `http://127.0.0.1:8088/api/files/images/${values(self.communities)[0]?.logo}`
+            return `${steedosClient.getBaseRoute()}/api/files/images/${values(self.communities)[0]?.logo}`
         },
         get community(){
             //TODO
@@ -77,7 +81,7 @@ export const MainStore = types
         }
 
         function setUserInfo(data: any) {
-            self.userInfo = UserInfoStore.create({...data, avatar: `http://127.0.0.1:8088/avatar/${data.userId}`})
+            self.userInfo = UserInfoStore.create({...data, avatar: `${self.rootUrl}/avatar/${data.userId}`})
         }
 
         function setLoginPage(data: any) {
@@ -123,52 +127,46 @@ export const MainStore = types
                 try {
                     let _id = 'YsSAi43ZHEJs5L79i';
                     // ... yield can be used in async/await style
-                    const response = yield getEnv(self).fetcher({
-                        url: 'http://127.0.0.1:8088/graphql',
-                        method: 'post',
-                        data: {
-                            query: `
-                            {
-                                community(filters:"_id eq ${_id}"){
-                                  _id
-                                  name
-                                  logo
-                                  description
-                                  url
-                                  path
-                                  active
-                                  pages:related__community_page{
+                    const response = yield steedosClient.graphql.query(`
+                    {
+                        community(filters:"_id eq ${_id}"){
+                          _id
+                          name
+                          logo
+                          description
+                          url
+                          path
+                          active
+                          pages:related__community_page{
+                            _id,
+                            name,
+                            path,
+                            title,
+                            schema
+                          },
+                          navigations:related__community_navigation{
+                            _id,
+                            name,
+                            menus: related__community_navigation_menu{
+                                _id,
+                                url,
+                                icon,
+                                type,
+                                name,
+                                page {
                                     _id,
                                     name,
                                     path,
-                                    title,
-                                    schema
-                                  },
-                                  navigations:related__community_navigation{
-                                    _id,
-                                    name,
-                                    menus: related__community_navigation_menu{
-                                        _id,
-                                        url,
-                                        icon,
-                                        type,
-                                        name,
-                                        page {
-                                            _id,
-                                            name,
-                                            path,
-                                            title
-                                        },
-                                        event,
-                                        sort
-                                    }
-                                  }
-                                }
-                              }
-                            `
+                                    title
+                                },
+                                event,
+                                sort
+                            }
+                          }
                         }
-                    })
-                    const community = response.data.data.community || [];
+                      }
+                    `)
+                    const community = response.data.community || [];
                     if(community.length > 0){
                         addCommunity(community[0])
                     }
@@ -177,43 +175,29 @@ export const MainStore = types
                     console.error("Failed to fetch projects", error)
                 }
             }),
-            fetchUserInfo: flow(function* fetchUserInfo() { // <- note the star, this a generator function!
+            fetchUserInfo: flow(function* fetchUserInfo() {
                 try {
-                    // ... yield can be used in async/await style
-                    const response = yield getEnv(self).fetcher({
-                        url: 'http://127.0.0.1:8088/accounts/user',
-                        method: 'get'
-                    })
-                    const userInfo = response.data;
+                    const userInfo = yield steedosClient.getMe();
                     setUserInfo(userInfo);
                 } catch (error) {
-                    // ... including try/catch error handling
                     console.error("Failed to fetch projects", error)
                 }
             }),
-            fetchLoginPage: flow(function* fetchLoginPage() { // <- note the star, this a generator function!
+            fetchLoginPage: flow(function* fetchLoginPage() {
                 try {
-                    // ... yield can be used in async/await style
-                    const response = yield getEnv(self).fetcher({
-                        url: 'http://127.0.0.1:8088/api/community/public/help/login',
-                        method: 'get'
-                    })
-                    const loginPage = response.data;
+                    const loginPage = yield steedosClient.doFetch(`${steedosClient.getBaseRoute()}/api/community/public/help/login`, {method: 'GET'})
                     setLoginPage(loginPage);
                 } catch (error) {
-                    // ... including try/catch error handling
                     console.error("Failed to fetch projects", error)
                 }
             }),
             afterCreate() {
-                console.log('afterCreate....');
+                console.log('afterCreate....', getEnv(self).rootUrl());
+                steedosClient.setUrl(getEnv(self).rootUrl());
                 if(typeof window !== 'undefined'){
 
-                    (window as any).SteedosClient = new SteedosClient();
-
-                    (window as any).SteedosClient.setUrl('http://127.0.0.1:8088');
                     (window as any).SteedosLogin = function(){
-                        (window as any).SteedosClient.login($('#email').val() || $("[name='email']").val(), $('#password').val() || $("[name='password']").val()).then((result: any) => {
+                        steedosClient.login($('#email').val() || $("[name='email']").val(), $('#password').val() || $("[name='password']").val()).then((result: any) => {
                             console.log('result', result);
                             (self as any).saveUserInfo(result.user);
                             window.location.href = '/';
@@ -250,13 +234,10 @@ export const MainStore = types
                         window.location.href = "/#/login";
                     }else{
                         (self as any).fetchUserInfo();
-                        applySnapshot(self, {userInfo: UserInfoStore.create({_id: userId, avatar: `http://127.0.0.1:8088/avatar/${userId}`})})
                         const search  = new URLSearchParams(window.location.search);
                         const pageId = search.get('id');
                         (self as any).fetchCommunity(pageId);
                     }
-                    
-
                 }
             }
         };

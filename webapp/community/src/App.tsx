@@ -19,9 +19,6 @@ export default function(): JSX.Element {
                     if (data) {
                         config.params = data;
                     }
-                    console.log('axios', axios);
-                    console.log('method', method);
-                    console.log('(axios as any)[method]', (axios as any)[method]);
                     return (axios as any)[method](url, config);
                 } else if (data && data instanceof FormData) {
                     // config.headers = config.headers || {};
@@ -51,6 +48,9 @@ export default function(): JSX.Element {
                 const ret = copy(contents, options);
                 ret && (!options || options.shutup !== true) && toast.info('内容已拷贝到剪切板');
                 return ret;
+            },
+            rootUrl: ()=>{
+                return "http://127.0.0.1:8088";
             }
         }
     ));
