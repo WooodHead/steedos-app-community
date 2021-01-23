@@ -82,7 +82,7 @@ export const MainStore = types
                 try {
                     // ... yield can be used in async/await style
                     const response = yield getEnv(self).fetcher({
-                        url: 'http://127.0.0.1:8088/api/v4/community_page/'+id,
+                        url: `${getEnv(self).rootUrl()}/api/v4/community_page/${id}`,
                         method: 'put',
                         data: {
                             $set: {
@@ -115,12 +115,11 @@ export const MainStore = types
                 try {
                     // ... yield can be used in async/await style
                     const response = yield getEnv(self).fetcher({
-                        url: 'http://127.0.0.1:8088/api/v4/community_page/'+id,
+                        url: `${getEnv(self).rootUrl()}/api/v4/community_page/${id}`,
                         method: 'get'
                     })
 
                     const page = response.data;
-
 
                     let schema = {
                         type: 'page',

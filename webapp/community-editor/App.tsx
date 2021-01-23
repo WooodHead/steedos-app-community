@@ -51,6 +51,10 @@ export default function(): JSX.Element {
                 const ret = copy(contents, options);
                 ret && (!options || options.shutup !== true) && toast.info('内容已拷贝到剪切板');
                 return ret;
+            },
+            rootUrl: ()=>{
+                //TODO 动态赋值
+                return "http://127.0.0.1:8088";
             }
         }
     ));
