@@ -205,7 +205,7 @@ ghPages.match('::package', {
     ]
 });
 
-ghPages.match('*.{css,less,scss}', {
+ghPages.match('*.{less,scss}', {
     optimizer: fis.plugin('clean-css'),
     useHash: true
 });
