@@ -2,7 +2,7 @@ const path = require('path');
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-
+const CopyPlugin = require('copy-webpack-plugin');
 module.exports = {
   mode: 'development',
   entry: {
@@ -30,7 +30,13 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: 'src/index.html'
     }),
-    new MonacoWebpackPlugin()
+    new MonacoWebpackPlugin(),
+    new CopyPlugin({
+      patterns: [{
+        from: path.join(__dirname, 'public'),
+        to: path.resolve(__dirname, path.join('dist', 'public'))
+    }],
+    }),
   ],
   resolve: {
     extensions: ['.tsx', '.ts', '.js', '.html']
