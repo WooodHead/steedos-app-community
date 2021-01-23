@@ -6,7 +6,7 @@
 
 ### community
 - yarn
-- yarn start
+- yarn server
 
 ### community-editor
 - npm i
