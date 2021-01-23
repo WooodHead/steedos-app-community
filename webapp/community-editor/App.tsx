@@ -57,7 +57,7 @@ export default function(): JSX.Element {
 
     return (
         <Provider store={store}>
-            <RootRoute store={store} />
+            <RootRoute store={store}/>
         </Provider>
     );
 }

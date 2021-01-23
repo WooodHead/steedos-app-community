@@ -10,7 +10,7 @@ import '../renderer/SteedosObjectCRUDRenderer';
 
 const Page = React.lazy(() => import('./page'));
 const LoginPage = React.lazy(() => import('./loginPage'));
-
+const basename='/help'
 export default observer(function({store}: {store: IMainStore}) {
     let redirectTo = '';
     store.communities.forEach(function(value, key){
@@ -19,16 +19,16 @@ export default observer(function({store}: {store: IMainStore}) {
     })
     console.log('redirectTo', redirectTo);
     return (
-        <Router>
+        <Router basename={basename}>
             <div className="routes-wrapper">
                 <ToastComponent key="toast" position={'top-right'} theme={store.theme} />
                 <AlertComponent key="alert" theme={store.theme} />
                 <React.Suspense fallback={<Spinner overlay className="m-t-lg" size="lg" />}>
                     <Switch>
                         {
-                        redirectTo && <Redirect to={`/${redirectTo}`} from={`/`} exact />
+                        redirectTo && <Redirect to={`/${redirectTo}`} from={'/'} exact />
                         }
-                        <Route path="/login" component={LoginPage} />
+                        <Route path={`/login`} component={LoginPage} />
                         <Route path="/:id" component={Page} />
                     </Switch>
                 </React.Suspense>
