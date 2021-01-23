@@ -198,12 +198,12 @@ export default inject('store')(
                     ))}
                     <Route component={NotFound} />
                 </Switch>
-                <AddPageModal
+                {/* <AddPageModal
                     show={store.addPageIsOpen}
                     onClose={() => store.setAddPageIsOpen(false)}
                     onConfirm={handleConfirm}
                     pages={getPages()}
-                />
+                /> */}
             </Layout>
         );
     })
