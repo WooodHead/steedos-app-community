@@ -1,6 +1,6 @@
 import {types, getEnv} from 'mobx-state-tree';
 import {PageStore} from './Page';
-import {NavigationalStore} from './Navigational'
+import {NavigationalStore} from './Navigation'
 export const CommunityStore = types
     .model('Community', {
         _id: types.string,
