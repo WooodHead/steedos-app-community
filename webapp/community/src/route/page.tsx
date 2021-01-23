@@ -16,6 +16,7 @@ import {RouteComponentProps} from 'react-router-dom';
 // import {Layout, Switch, classnames as cx} from 'amis';
 import Navigation from '../component/navigation';
 import Layout from '../component/layout';
+import { IPageStore } from '../store/Page';
 // amis 环境配置
 const env = {
     // 下面三个接口必须实现
@@ -104,30 +105,18 @@ const env = {
 export default inject('store')(
     observer(function ({store, location, history, match}: {store: IMainStore} & RouteComponentProps<{id: string}>) {
         const pagePath: string = match.params.id;
-        let logo: any = '';
-        let pageSchema: any = {};
-        let navigations: Array<any> = [];
-        store.communities.forEach(function(value, key){
-            const page = value.pages.find(function(_page){
-                return _page.path === pagePath
-            })
-            logo = value.logo;
-            navigations = value.navigations;
-            pageSchema = JSON.parse(page?.schema || "{}");
-            // pageSchema = JSON.parse(value.related__community_page[0].schema)
-        })
+        const page: any = store.getPage(pagePath);
+        const pageSchema = JSON.parse(page?.schema || "{}");
         return (
             <div>
-                <Layout navigations={navigations} history={history} logo={`http://127.0.0.1:8088/api/files/images/${logo}`} userInfo={store.userInfo}>
-                    {renderAmis(
-                        // 这里是 amis 的 Json 配置。
-                        pageSchema,
-                        {
-                            // props...
-                        },
-                        env
-                    )}
-                </Layout>
+                {renderAmis(
+                    // 这里是 amis 的 Json 配置。
+                    pageSchema,
+                    {
+                        // props...
+                    },
+                    env
+                )}
             </div>
         );
     })

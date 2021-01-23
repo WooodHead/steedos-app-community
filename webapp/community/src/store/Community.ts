@@ -15,4 +15,4 @@ export const CommunityStore = types
     .views(self => ({}))
     .actions(self => ({}));
 
-export type IPageStore = typeof CommunityStore.Type;
+export type ICommunityStore = typeof CommunityStore.Type;

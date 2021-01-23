@@ -1,4 +1,5 @@
 import {types, getEnv, applySnapshot, getSnapshot, flow} from 'mobx-state-tree';
+import { values } from "mobx"
 import {CommunityStore} from './Community';
 import {when, reaction, $mobx} from 'mobx';
 import { UserInfoStore } from './UserInfo';
@@ -30,6 +31,25 @@ export const MainStore = types
         },
         get copy() {
             return getEnv(self).copy;
+        },
+        get logo() {
+            return `http://127.0.0.1:8088/api/files/images/${values(self.communities)[0]?.logo}`
+        },
+        get community(){
+            //TODO
+            return values(self.communities)?.length > 0 ? values(self.communities)[0] : null
+        },
+        get navigations(){
+            return values(self.communities)?.length > 0 ? values(self.communities)[0].navigations : null
+        },
+        getPage(pagePath: string) {
+            let page;
+            self.communities.forEach(function(value, key){
+                page = value.pages.find(function(_page){
+                    return _page.path === pagePath
+                })
+            })
+            return page;
         }
     }))
     .actions(self => {

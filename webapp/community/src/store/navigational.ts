@@ -9,4 +9,4 @@ export const NavigationalStore = types
     .views(self => ({}))
     .actions(self => ({}))
 
-export type IPageStore = typeof NavigationalStore.Type;
+export type INavigationalStore = typeof NavigationalStore.Type;

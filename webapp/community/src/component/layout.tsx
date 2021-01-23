@@ -60,9 +60,10 @@ class Layout extends React.Component {
     }
     render() {
         const { isOpen } = this.state
-        const { logo, userInfo } = this.props as any
+        const { logo, userInfo, navigations } = this.props as any
         return (
             <div>
+                { navigations && 
                 <div className="h-screen flex overflow-hidden bg-white">
                     <Transition show={isOpen}>
                     <div className="md:hidden">
@@ -188,6 +189,7 @@ class Layout extends React.Component {
                         </main>
                     </div>
                 </div>
+                }
             </div>
         )
     }

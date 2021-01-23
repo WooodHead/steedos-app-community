@@ -14,4 +14,4 @@ export const NavigationalMenuStore = types
     .views(self => ({}))
     .actions(self => ({}))
 
-export type IPageStore = typeof NavigationalMenuStore.Type;
+export type INavigationalMenuStore = typeof NavigationalMenuStore.Type;

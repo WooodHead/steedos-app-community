@@ -8,4 +8,4 @@ export const UserInfoStore = types
     .views(self => ({}))
     .actions(self => ({}))
 
-export type IPageStore = typeof UserInfoStore.Type;
+export type IUserInfoStore = typeof UserInfoStore.Type;

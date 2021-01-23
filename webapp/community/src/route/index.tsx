@@ -7,6 +7,7 @@ import {IMainStore} from '../store';
 
 import '../renderer/MyRenderer';
 import '../renderer/SteedosObjectCRUDRenderer';
+import LayoutInRouter from './layout';
 
 const Page = React.lazy(() => import('./page'));
 const LoginPage = React.lazy(() => import('./loginPage'));
@@ -29,7 +30,7 @@ export default observer(function({store}: {store: IMainStore}) {
                         redirectTo && <Redirect to={`/${redirectTo}`} from={'/'} exact />
                         }
                         <Route path={`/login`} component={LoginPage} />
-                        <Route path="/:id" component={Page} />
+                        <LayoutInRouter path="/:id" component={Page} props={{store: store}}/>
                     </Switch>
                 </React.Suspense>
             </div>
