@@ -4,11 +4,11 @@ import {inject, observer} from 'mobx-react';
 import {IMainStore} from '../store';
 import {RouteComponentProps} from 'react-router-dom';
 import {Layout, Switch, classnames as cx, toast} from 'amis';
-import '../renderer/MyRenderer';
-import '../editor/MyRenderer';
+// import '../renderer/MyRenderer';
+// import '../editor/MyRenderer';
 
-import '../renderer/SteedosObjectCRUDRenderer';
-import '../editor/SteedosObjectCRUD';
+// import '../renderer/SteedosObjectCRUDRenderer';
+// import '../editor/SteedosObjectCRUD';
 
 let currentIndex = '-1';
 
