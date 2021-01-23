@@ -193,52 +193,52 @@ export const MainStore = types
                 console.log('afterCreate....', getEnv(self).rootUrl());
                 steedosClient.setUrl(getEnv(self).rootUrl());
                 if(typeof window !== 'undefined'){
-
-                    (window as any).SteedosLogin = function(){
-                        steedosClient.login($('#email').val() || $("[name='email']").val(), $('#password').val() || $("[name='password']").val()).then((result: any) => {
-                            console.log('result', result);
-                            (self as any).saveUserInfo(result.user);
-                            window.location.href = '/';
-                        }).catch((err:any) => {
-                            console.log('err', err);
-                            $('#loginFormErrorInfo').remove();
-                            $("form").append(`
-                                <div class="rounded-md bg-red-50 p-4" id='loginFormErrorInfo'>
-                                    <div class="flex">
-                                    <div class="flex-shrink-0">
-                                        <!-- Heroicon name: information-circle -->
-                                        <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-                                        </svg>
+                    try {
+                        const communityPath = (window as any).location.href.split("#")[1].split('/')[1];
+                        (self as any).fetchCommunity(communityPath);
+                    
+                        (window as any).SteedosLogin = function(){
+                            steedosClient.login($('#email').val() || $("[name='email']").val(), $('#password').val() || $("[name='password']").val()).then((result: any) => {
+                                console.log('result', result);
+                                (self as any).saveUserInfo(result.user);
+                                window.location.href = `/#/${communityPath}`;;
+                            }).catch((err:any) => {
+                                console.log('err', err);
+                                $('#loginFormErrorInfo').remove();
+                                $("form").append(`
+                                    <div class="rounded-md bg-red-50 p-4" id='loginFormErrorInfo'>
+                                        <div class="flex">
+                                        <div class="flex-shrink-0">
+                                            <!-- Heroicon name: information-circle -->
+                                            <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                            </svg>
+                                        </div>
+                                        <div class="ml-3 flex-1 md:flex md:justify-between">
+                                            <p class="text-sm text-blue-700">
+                                            账户、密码错误
+                                            </p>
+                                        </div>
+                                        </div>
                                     </div>
-                                    <div class="ml-3 flex-1 md:flex md:justify-between">
-                                        <p class="text-sm text-blue-700">
-                                        账户、密码错误
-                                        </p>
-                                    </div>
-                                    </div>
-                                </div>
-                            `)
-                        });
-                        return false;
-                    };
+                                `)
+                            });
+                            return false;
+                        };
 
-                    (self as any).fetchLoginPage();
+                        (self as any).fetchLoginPage();
 
-                    const userId = getCookie('X-User-Id');
+                        const userId = getCookie('X-User-Id');
 
-                    if(!userId){
-                        // window.location.href = "http://127.0.0.1:8088/accounts/a/#/login?redirect_uri="+ window.location.href;
-                        window.location.href = "/#/login";
-                    }else{
-                        (self as any).fetchUserInfo();
-                        try {
-                            const communityPath = (window as any).location.href.split("#")[1].split('/')[1];
+                        if(!userId){
+                            // window.location.href = "http://127.0.0.1:8088/accounts/a/#/login?redirect_uri="+ window.location.href;
+                            window.location.href = `/#/${communityPath}/login`;
+                        }else{
+                            (self as any).fetchUserInfo();
                             (self as any).fetchCommunity(communityPath);
-                        } catch (error) {
-                            
                         }
-                        
+                    } catch (error) {
+                        console.error(error);
                     }
                 }
             }
