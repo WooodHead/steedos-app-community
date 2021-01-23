@@ -34,7 +34,7 @@ module.exports = {
     new CopyPlugin({
       patterns: [{
         from: path.join(__dirname, 'public'),
-        to: path.resolve(__dirname, path.join('dist', 'public'))
+        to: path.resolve(__dirname, path.join('../../public', 'community', 'public'))
     }],
     }),
   ],
