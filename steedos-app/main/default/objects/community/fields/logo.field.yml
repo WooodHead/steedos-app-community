@@ -7,8 +7,8 @@ is_wide: true
 label: Logo
 omit: false
 readonly: false
-required: false
+required: true
 searchable: false
-sort_no: 150
+sort_no: 125
 sortable: false
 type: image
