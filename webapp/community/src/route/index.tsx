@@ -17,7 +17,7 @@ export default observer(function({store}: {store: IMainStore}) {
         console.log('value', value.pages[0]);
         redirectTo = value.pages[0].path
     })
-    const basename = store.routerBasename;
+    const basename = `/${store.routerBasename}`;
     return (
         <div>
             { basename && 

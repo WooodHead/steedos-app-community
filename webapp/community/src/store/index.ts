@@ -45,7 +45,8 @@ export const MainStore = types
             return values(self.communities)?.length > 0 ? values(self.communities)[0] : null
         },
         get routerBasename(){
-            return values(self.communities)?.length > 0 ? `/${values(self.communities)[0].path}` : self._routerBasename
+            console.log('get self._routerBasename', self._routerBasename);
+            return values(self.communities)?.length > 0 ? `${values(self.communities)[0].path}` : self._routerBasename
         },
         get navigations(){
             return values(self.communities)?.length > 0 ? values(self.communities)[0].navigations : null
@@ -110,6 +111,10 @@ export const MainStore = types
                 if (c.indexOf(name)==0) return c.substring(name.length,c.length);
             }
             return "";
+        }
+
+        function goLogin(){
+            window.location.href = `/community/#/${self.routerBasename}/login`;
         }
 
         return {
@@ -190,6 +195,7 @@ export const MainStore = types
                     console.error("Failed to fetch projects", error)
                 }
             }),
+            goLogin,
             afterCreate() {
                 console.log('afterCreate....', getEnv(self).rootUrl());
                 steedosClient.setUrl(getEnv(self).rootUrl());
@@ -199,9 +205,9 @@ export const MainStore = types
                         self._routerBasename = communityPath;
                         (window as any).SteedosLogin = function(){
                             steedosClient.login($('#email').val() || $("[name='email']").val(), $('#password').val() || $("[name='password']").val()).then((result: any) => {
-                                console.log('result', result);
                                 (self as any).saveUserInfo(result.user);
-                                window.location.href = `/#/${communityPath}`;;
+                                (self as any).fetchCommunity(communityPath);
+                                window.location.href = `/community/#/${communityPath}`;
                             }).catch((err:any) => {
                                 console.log('err', err);
                                 $('#loginFormErrorInfo').remove();
@@ -226,16 +232,21 @@ export const MainStore = types
                             return false;
                         };
 
+                        (window as any).SteedosLogout = function(){
+                            steedosClient.logout().then((result: any) => {
+                                goLogin();
+                            }).catch((err: any) => {
+                                console.log('err', err);
+                                goLogin();
+                            });
+                        };
+
                         (self as any).fetchLoginPage(communityPath);
 
                         const userId = getCookie('X-User-Id');
-                        console.log('userId', userId);
                         if(!userId){
-                            console.log('userId is null');
-                            // window.location.href = "http://127.0.0.1:8088/accounts/a/#/login?redirect_uri="+ window.location.href;
-                             window.location.href = `/community/#/${communityPath}/login`;
+                            goLogin();
                         }else{
-                            console.log('userId fetchCommunity');
                             (self as any).fetchUserInfo();
                             (self as any).fetchCommunity(communityPath);
                         }

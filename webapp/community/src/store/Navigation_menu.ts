@@ -27,10 +27,10 @@ export const NavigationalMenuStore = types
                 case 'Event':
                     switch (menu.event) {
                         case 'Login':
-                            window.location.href = `${rootUrl}/accounts/a/#/login?redirect_uri=`+ encodeURIComponent(window.location.href);
+                            (window as any).SteedosLogin();
                             break;
                         case 'Logout':
-                            window.location.href = `${rootUrl}/accounts/a/#/login?redirect_uri=`+ encodeURIComponent(window.location.href);
+                            (window as any).SteedosLogout();
                             break;
                         default:
                             break;
