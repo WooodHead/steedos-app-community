@@ -12,6 +12,7 @@ export const MainStore = types
         userInfo: types.optional(UserInfoStore, {}),
         loginPage: types.optional(PageStore, {}),
         theme: 'default',
+        _routerBasename: types.maybeNull(types.string),
         asideFixed: true,
         asideFolded: false,
         offScreen: false,
@@ -44,7 +45,7 @@ export const MainStore = types
             return values(self.communities)?.length > 0 ? values(self.communities)[0] : null
         },
         get routerBasename(){
-            return values(self.communities)?.length > 0 ? `/${values(self.communities)[0].path}` : undefined
+            return values(self.communities)?.length > 0 ? `/${values(self.communities)[0].path}` : self._routerBasename
         },
         get navigations(){
             return values(self.communities)?.length > 0 ? values(self.communities)[0].navigations : null
@@ -181,9 +182,9 @@ export const MainStore = types
                     console.error("Failed to fetch projects", error)
                 }
             }),
-            fetchLoginPage: flow(function* fetchLoginPage() {
+            fetchLoginPage: flow(function* fetchLoginPage(communityPath) {
                 try {
-                    const loginPage = yield steedosClient.doFetch(`${steedosClient.getBaseRoute()}/api/community/public/help/login`, {method: 'GET'})
+                    const loginPage = yield steedosClient.doFetch(`${steedosClient.getBaseRoute()}/api/community/public/${communityPath}/login`, {method: 'GET'})
                     setLoginPage(loginPage);
                 } catch (error) {
                     console.error("Failed to fetch projects", error)
@@ -195,8 +196,7 @@ export const MainStore = types
                 if(typeof window !== 'undefined'){
                     try {
                         const communityPath = (window as any).location.href.split("#")[1].split('/')[1];
-                        (self as any).fetchCommunity(communityPath);
-                    
+                        self._routerBasename = communityPath;
                         (window as any).SteedosLogin = function(){
                             steedosClient.login($('#email').val() || $("[name='email']").val(), $('#password').val() || $("[name='password']").val()).then((result: any) => {
                                 console.log('result', result);
@@ -226,14 +226,16 @@ export const MainStore = types
                             return false;
                         };
 
-                        (self as any).fetchLoginPage();
+                        (self as any).fetchLoginPage(communityPath);
 
                         const userId = getCookie('X-User-Id');
-
+                        console.log('userId', userId);
                         if(!userId){
+                            console.log('userId is null');
                             // window.location.href = "http://127.0.0.1:8088/accounts/a/#/login?redirect_uri="+ window.location.href;
-                            window.location.href = `/#/${communityPath}/login`;
+                             window.location.href = `/community/#/${communityPath}/login`;
                         }else{
+                            console.log('userId fetchCommunity');
                             (self as any).fetchUserInfo();
                             (self as any).fetchCommunity(communityPath);
                         }

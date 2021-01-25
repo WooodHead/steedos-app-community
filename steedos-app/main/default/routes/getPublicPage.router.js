@@ -6,7 +6,7 @@ router.get('/api/community/public/:communityPath/:pagePath', async function (req
     let urlParams = req.params;
     let communityPath = urlParams.communityPath;
     let pagePath = urlParams.pagePath;
-    const communitys = await objectql.getObject('community').find({filters: ['url','=', communityPath]});
+    const communitys = await objectql.getObject('community').find({filters: ['path','=', communityPath]});
     if(communitys.length > 0){
         const community = communitys[0];
         //TODO 此处应该返回public page。
