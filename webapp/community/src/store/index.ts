@@ -127,7 +127,7 @@ export const MainStore = types
                 try {
                     const response = yield steedosClient.graphql.query(`
                     {
-                        community(filters:"path eq ${communityPath}"){
+                        community(filters:"path eq '${communityPath}'"){
                           _id
                           name
                           logo
