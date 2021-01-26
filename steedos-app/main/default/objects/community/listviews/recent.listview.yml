@@ -1,6 +1,15 @@
 name: recent
 columns:
   - field: name
+    wrap: false
+  - field: path
+    wrap: false
+  - field: active
+    wrap: false
+  - field: theme
+    wrap: false
+  - field: description
+    wrap: false
 filter_scope: space
 filters: []
 label: 最近查看
