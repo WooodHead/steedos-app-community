@@ -3,7 +3,7 @@ filterable: false
 hidden: false
 index: false
 is_name: false
-is_wide: false
+is_wide: true
 label: Path
 omit: false
 readonly: false

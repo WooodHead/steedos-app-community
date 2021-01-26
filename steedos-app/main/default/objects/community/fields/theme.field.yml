@@ -1,0 +1,19 @@
+name: theme
+defaultValue: default
+filterable: false
+hidden: false
+index: false
+is_name: false
+is_wide: true
+label: Theme
+multiple: false
+omit: false
+options:
+  - label: 默认
+    value: default
+readonly: true
+required: true
+searchable: false
+sort_no: 180
+sortable: false
+type: select
