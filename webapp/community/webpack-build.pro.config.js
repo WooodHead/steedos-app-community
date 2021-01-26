@@ -3,8 +3,9 @@ const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
+const TerserPlugin = require("terser-webpack-plugin");
 module.exports = {
-  mode: 'development',
+  mode: 'production',
   entry: {
     index: './src/index.tsx'
   },
@@ -30,27 +31,35 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: 'src/index.html'
     }),
-    new MonacoWebpackPlugin(),
+    new MonacoWebpackPlugin({
+      languages: ["json", "javascript", "graphql", "markdown", "scheme", "yaml", "xml", "yaml", "css", "html", "handlebars", "dockerfile"],
+    }),
     new CopyPlugin({
       patterns: [{
         from: path.join(__dirname, 'public'),
         to: path.resolve(__dirname, path.join('../../public', 'community', 'public'))
-    }],
-    }),
+      }]
+    })
   ],
+  optimization: {
+    minimize: true,
+    minimizer: [new TerserPlugin({
+      sourceMap:false,
+      extractComments: false,
+      terserOptions: {
+        ecma: undefined,
+        warnings: false,
+        parse: {},
+        compress: {
+          drop_console: true,
+          drop_debugger: true,
+          pure_funcs: ['console.log'],
+        },
+      }
+    })],
+  },
   resolve: {
     extensions: ['.tsx', '.ts', '.js', '.html']
-  },
-  devtool: 'inline-source-map',
-  devServer: {
-    contentBase: path.join(__dirname, 'dist'),
-    publicPath: path.join(__dirname, 'dist'),
-    compress: true,
-    port: 9000,
-    hot: true,
-    proxy: {
-      '/api': 'http://localhost:3000'
-    }
   },
   output: {
     filename: '[name].bundle.js',

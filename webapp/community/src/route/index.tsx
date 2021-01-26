@@ -14,7 +14,6 @@ const LoginPage = React.lazy(() => import('./loginPage'));
 export default observer(function({store}: {store: IMainStore}) {
     let redirectTo = '';
     store.communities.forEach(function(value, key){
-        console.log('value', value.pages[0]);
         redirectTo = value.pages[0].path
     })
     const basename = `/${store.routerBasename}`;

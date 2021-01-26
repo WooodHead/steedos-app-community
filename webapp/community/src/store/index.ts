@@ -1,7 +1,6 @@
-import {types, getEnv, applySnapshot, getSnapshot, flow} from 'mobx-state-tree';
+import {types, getEnv, flow} from 'mobx-state-tree';
 import { values } from "mobx"
 import {CommunityStore} from './Community';
-import {when, reaction, $mobx} from 'mobx';
 import { UserInfoStore } from './UserInfo';
 import { SteedosClient } from '@steedos/client';
 import { PageStore } from './Page';
