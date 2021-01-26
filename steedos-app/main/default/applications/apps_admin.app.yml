@@ -1,4 +1,5 @@
 _id: apps_feature_settings
+code: apps_admin
 name: Apps
 admin_menus:
   - _id: feature_settings
