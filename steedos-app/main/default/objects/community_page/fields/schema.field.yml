@@ -12,4 +12,4 @@ rows: 0
 searchable: false
 sort_no: 200
 sortable: false
-type: textarea
+type: code

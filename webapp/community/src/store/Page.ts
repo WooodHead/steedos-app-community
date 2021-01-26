@@ -5,6 +5,7 @@ export const PageStore = types
         icon: '',
         path: '',
         label: '',
+        title: types.maybeNull(types.string),
         schema: types.maybeNull(types.string)
     })
     .views(self => ({}))

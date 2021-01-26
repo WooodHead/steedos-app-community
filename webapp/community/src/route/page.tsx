@@ -106,6 +106,9 @@ export default inject('store')(
     observer(function ({store, location, history, match}: {store: IMainStore} & RouteComponentProps<{id: string}>) {
         const pagePath: string = match.params.id;
         const page: any = store.getPage(pagePath);
+        if(page?.title){
+            document.title = page.title;
+        }
         const pageSchema = JSON.parse(page?.schema || "{}");
         return (
             <div>

@@ -61,6 +61,7 @@
     "express": "^4.17.1",
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^4.5.0",
+    "mobx-state-tree": "^3.7.0",
     "monaco-editor-webpack-plugin": "^2.0.0",
     "prettier": "^2.2.1",
     "snowpack": "^2.18.2",

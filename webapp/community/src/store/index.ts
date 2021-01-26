@@ -137,7 +137,6 @@ export const MainStore = types
                           name
                           logo
                           description
-                          url
                           path
                           active
                           pages:related__community_page{
