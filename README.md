@@ -15,3 +15,7 @@
 登录页面有以下强制要求：
 - 必须要有form元素，并且form中要有id | name为email、password 的元素。
 - form需要指定登录事件，`onsubmit="return SteedosLogin()"`
+
+## 启动项目
+- 安装依赖项目：根路径下执行 `yarn`
+- 启动项目: yarn start
