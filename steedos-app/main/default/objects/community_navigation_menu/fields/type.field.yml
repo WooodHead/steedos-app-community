@@ -14,16 +14,16 @@ options:
     value: Event
   - label: External URL
     value: ExternalLink
-  - label: Global Action
-    value: GlobalAction
-  - label: Menu Label
-    value: MenuLabel
-  - label: Navigational Topic
-    value: NavigationalTopic
-  - label: Steedos Object
-    value: SteedosObject
-  - label: System Link
-    value: SystemLink
+  # - label: Global Action
+  #   value: GlobalAction
+  # - label: Menu Label
+  #   value: MenuLabel
+  # - label: Navigational Topic
+  #   value: NavigationalTopic
+  # - label: Steedos Object
+  #   value: SteedosObject
+  # - label: System Link
+  #   value: SystemLink
 readonly: false
 required: false
 searchable: false

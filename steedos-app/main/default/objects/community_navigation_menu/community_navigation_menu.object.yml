@@ -15,3 +15,16 @@ enable_workflow: false
 icon: macros
 is_enable: true
 label: Navigation Menu
+form:
+  beforeEdit: !!js/function |
+    function(){
+      Steedos.Community.NavigationMenu.changeSchema(this.doc, this.schema);
+    }
+  afterEdit: !!js/function |
+    function(){
+      Steedos.Community.NavigationMenu.changeSchema(this.doc, this.schema);
+    }
+  beforeView: !!js/function |
+    function(){
+      Steedos.Community.NavigationMenu.changeSchema(this.doc, this.schema);
+    }
