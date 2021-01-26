@@ -1,15 +1,15 @@
-name: meta_tags
+name: override_default_theme
 filterable: false
+group: Layout
 hidden: true
 index: false
 is_name: false
 is_wide: false
-label: 'Meta Tags[TODO]'
+label: Override the default theme layout for this page
 omit: true
 readonly: false
 required: false
-rows: 3
 searchable: false
-sort_no: 170
+sort_no: 210
 sortable: false
-type: textarea
+type: boolean

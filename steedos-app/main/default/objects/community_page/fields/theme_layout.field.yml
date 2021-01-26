@@ -1,5 +1,5 @@
-name: layout
-description: 从模板选择
+name: theme_layout
+description: 从可选项中选择
 filterable: false
 group: Layout
 hidden: true
@@ -9,7 +9,7 @@ inlineHelpText: >-
   layout.
 is_name: false
 is_wide: false
-label: 'Layout [TODO]'
+label: 'Theme Layout [TODO]'
 omit: true
 readonly: false
 required: false
