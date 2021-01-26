@@ -7,6 +7,19 @@ is_wide: false
 label: Page
 multiple: false
 omit: false
+depend_on: 
+  - navigation
+filtersFunction: !!js/function |
+  function(filters, dependValues){
+    console.log('dependValues', dependValues);
+    if(dependValues){
+      const navigation = Creator.odata.get("community_navigation", dependValues.navigation, "community");
+      console.log('filtersFunction', navigation);
+      if(navigation){
+        return "(community eq '" + navigation.community + "')"
+      }
+    }
+  }
 readonly: false
 reference_to: community_page
 required: false
