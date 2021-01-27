@@ -174,7 +174,7 @@ export const MainStore = types
                     }
                 } catch (error) {
                     // ... including try/catch error handling
-                    console.error("Failed to fetch projects", error)
+                    console.error("Failed to fetch community", error)
                 }
             }),
             fetchUserInfo: flow(function* fetchUserInfo() {
@@ -182,7 +182,8 @@ export const MainStore = types
                     const userInfo = yield steedosClient.getMe();
                     setUserInfo(userInfo);
                 } catch (error) {
-                    console.error("Failed to fetch projects", error)
+                    console.error("Failed to fetch userinfo", error)
+                    goLogin();
                 }
             }),
             fetchLoginPage: flow(function* fetchLoginPage(communityPath) {
@@ -190,7 +191,7 @@ export const MainStore = types
                     const loginPage = yield steedosClient.doFetch(`${steedosClient.getBaseRoute()}/api/community/public/${communityPath}/login`, {method: 'GET'})
                     setLoginPage(loginPage);
                 } catch (error) {
-                    console.error("Failed to fetch projects", error)
+                    console.error("Failed to fetch loginPage", error)
                 }
             }),
             goLogin,
