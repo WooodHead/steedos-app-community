@@ -10,22 +10,34 @@ export default function(): JSX.Element {
     const store = ((window as any).store = MainStore.create(
         {},
         {
-            fetcher: ({url, method, data, config}: any) => {
+            fetcher: ({
+                url, // 接口地址
+                method, // 请求方法 get、post、put、delete
+                data, // 请求数据
+                responseType,
+                config, // 其他配置
+                headers // 请求头
+            }: any) => {
                 config = config || {};
-                config.headers = config.headers || {};
                 config.withCredentials = true;
-
+                responseType && (config.responseType = responseType);
+        
+                if (config.cancelExecutor) {
+                    config.cancelToken = new (axios as any).CancelToken(
+                        config.cancelExecutor
+                    );
+                }
+        
+                config.headers = headers || {};
+        
                 if (method !== 'post' && method !== 'put' && method !== 'patch') {
                     if (data) {
                         config.params = data;
                     }
-                    console.log('axios', axios);
-                    console.log('method', method);
-                    console.log('(axios as any)[method]', (axios as any)[method]);
                     return (axios as any)[method](url, config);
                 } else if (data && data instanceof FormData) {
-                    // config.headers = config.headers || {};
-                    // config.headers['Content-Type'] = 'multipart/form-data';
+                    config.headers = config.headers || {};
+                    config.headers['Content-Type'] = 'multipart/form-data';
                 } else if (
                     data &&
                     typeof data !== 'string' &&
@@ -33,9 +45,10 @@ export default function(): JSX.Element {
                     !(data instanceof ArrayBuffer)
                 ) {
                     data = JSON.stringify(data);
+                    config.headers = config.headers || {};
                     config.headers['Content-Type'] = 'application/json';
                 }
-
+        
                 return (axios as any)[method](url, data, config);
             },
             isCancel: (e: any) => axios.isCancel(e),
