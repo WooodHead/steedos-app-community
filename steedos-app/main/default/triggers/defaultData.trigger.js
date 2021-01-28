@@ -20,7 +20,7 @@ const defalut = {
             "label": "首页",
             "access": "Public",
             "title": "Home",
-            "schema": "{}"
+            "schema": "{\"type\":\"page\",\"body\":[{\"type\":\"tpl\",\"tpl\":\"<!-- This example requires Tailwind CSS v2.0+ -->\\n<div class=\\\"bg-white\\\">\\n  <div class=\\\"max-w-7xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-8\\\">\\n    <div class=\\\"text-center\\\">\\n      <h2 class=\\\"text-base font-semibold text-indigo-600 tracking-wide uppercase\\\">Welcome</h2>\\n      <p class=\\\"mt-1 text-4xl font-extrabold text-gray-900 sm:text-5xl sm:tracking-tight lg:text-5xl\\\">Set Up and Manage Experience Cloud Sites</p>\\n      <p class=\\\"max-w-xl mt-5 mx-auto text-xl text-gray-500\\\">Steedos Experience Cloud lets you create branded spaces for your employees, customers, and partners.</p>\\n    </div>\\n  </div>\\n</div>\",\"inline\":false,\"body\":[{\"type\":\"tpl\",\"tpl\":\"请编辑内容\",\"inline\":false}]}]}"
         },
         login: {
             "name": "login",
