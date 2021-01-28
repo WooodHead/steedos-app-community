@@ -160,17 +160,16 @@ export function schema2component(schema: any, transform?: Function, session: str
             } = this.props;
             const finalSchema = schemaProp || schema;
             let body: React.ReactNode;
-
+            const _location: any = location;
             finalSchema.type || (finalSchema.type = 'page');
-
             body = render(
                 finalSchema,
                 {
-                    location,
+                    location: _location,
                     data: utils.createObject({
                         ...match.params,
                         amisStore: store,
-                        pathname: location.pathname,
+                        pathname: _location.pathname,
                         params: match.params
                     }),
                     ...rest,
