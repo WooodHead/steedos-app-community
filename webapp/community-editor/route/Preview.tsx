@@ -28,8 +28,7 @@ export default inject('store')(
                             <i className="glyphicon glyphicon-align-justify"></i>
                         </button>
                         <div className={`a-Layout-brand`}>
-                            <i className="fa fa-paw"></i>
-                            <span className="hidden-folded m-l-sm">AMIS 编辑器</span>
+                            <span className="hidden-folded m-l-sm">community 编辑器</span>
                         </div>
                     </div>
                     {/* <div className={`a-Layout-headerBar`}>

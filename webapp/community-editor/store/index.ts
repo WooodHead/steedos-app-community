@@ -139,7 +139,7 @@ export const MainStore = types
                         icon: "",
                         id: id,
                         path: page.url,
-                        label: page.label,
+                        label: page.title,
                         schema: schema
                     })
                 } catch (error) {

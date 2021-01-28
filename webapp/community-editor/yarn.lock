@@ -164,10 +164,10 @@ amdefine@>=0.0.4:
   resolved "https://registry.npm.taobao.org/amdefine/download/amdefine-1.0.1.tgz#4a5282ac164729e93619bcfd3ad151f817ce91f5"
   integrity sha1-SlKCrBZHKek2Gbz9OtFR+BfOkfU=
 
-amis-editor@2.0.6:
-  version "2.0.6"
-  resolved "https://registry.npm.taobao.org/amis-editor/download/amis-editor-2.0.6.tgz#82c137875e8e9314b4f4d113cd539ebc3184be39"
-  integrity sha1-gsE3h16OkxS09NETzVOevDGEvjk=
+amis-editor@2.0.8:
+  version "2.0.8"
+  resolved "https://registry.npm.taobao.org/amis-editor/download/amis-editor-2.0.8.tgz#0a6398ba711fcc94869c998c4f6665419dfdc9e7"
+  integrity sha1-CmOYunEfzJSGnJmMT2ZlQZ39yec=
   dependencies:
     "@types/deep-diff" "^1.0.0"
     amis "*"
@@ -179,7 +179,7 @@ amis-editor@2.0.6:
     mobx-react "^6.1.4"
     mobx-state-tree "^3.7.0"
 
-amis@*, amis@^1.0.18-beta.9:
+amis@*:
   version "1.1.1"
   resolved "https://registry.npm.taobao.org/amis/download/amis-1.1.1.tgz#f40458ee1640573a73a40b8d0b864da17560807f"
   integrity sha1-9ARY7hZAVzpzpAuNC4ZNoXVggH8=
@@ -209,6 +209,62 @@ amis@*, amis@^1.0.18-beta.9:
     moment "^2.19.3"
     monaco-editor "0.21.2"
     papaparse "^5.3.0"
+    prop-types "^15.6.1"
+    qrcode.react "^0.8.0"
+    qs "6.5.1"
+    rc-input-number "6.1.1"
+    react "^16.8.6"
+    react-color "2.13.8"
+    react-cropper "1.0.1"
+    react-datetime "2.16.2"
+    react-dom "^16.8.6"
+    react-dropzone "11.2.4"
+    react-input-range "1.3.0"
+    react-json-tree "0.13.0"
+    react-overlays "0.8.3"
+    react-progress-2 "^4.4.2"
+    react-select "1.2.1"
+    react-textarea-autosize "5.1.0"
+    react-transition-group "2.9.0"
+    react-visibility-sensor "3.11.0"
+    setimmediate "1.0.5"
+    sortablejs "1.10.0"
+    tinymce "5.6.2"
+    tslib "^1.10.0"
+    uncontrollable "7.0.2"
+    video-react "0.14.1"
+
+amis@^1.1.3:
+  version "1.1.3"
+  resolved "https://registry.npm.taobao.org/amis/download/amis-1.1.3.tgz#b801be0f6691969f2d12fbe966f4bdcd069bbe5d"
+  integrity sha1-uAG+D2aRlp8tEvvpZvS9zQabvl0=
+  dependencies:
+    async "2.6.0"
+    attr-accept "2.2.2"
+    blueimp-canvastoblob "2.1.0"
+    classnames "2.2.5"
+    dom-helpers "^3.3.1"
+    downshift "3.1.4"
+    echarts "5.0.0"
+    echarts-stat "^1.2.0"
+    exceljs "^4.2.0"
+    file-saver "^2.0.2"
+    flv.js "1.5.0"
+    froala-editor "2.9.6"
+    hls.js "0.12.2"
+    hoist-non-react-statics "3.3.0"
+    immutability-helper "^3.1.1"
+    jquery "^3.2.1"
+    keycode "^2.1.9"
+    lodash "^4.17.15"
+    match-sorter "2.2.1"
+    mobx "^4.5.0"
+    mobx-react "^6.1.4"
+    mobx-state-tree "^3.7.0"
+    moment "^2.19.3"
+    monaco-editor "0.21.2"
+    papaparse "^5.3.0"
+    path-to-regexp "^6.2.0"
     prop-types "^15.6.1"
     qrcode.react "^0.8.0"
     qs "6.5.1"
@@ -1260,9 +1316,14 @@ ecc-jsbn@~0.1.1:
     jsbn "~0.1.0"
     safer-buffer "^2.1.0"
 
-echarts@^5.0.0:
+echarts-stat@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.npm.taobao.org/echarts-stat/download/echarts-stat-1.2.0.tgz#d1e7a05d1827724c5cde81f76ee1d75a901746a2"
+  integrity sha1-0eegXRgnckxc3oH3buHXWpAXRqI=
+
+echarts@5.0.0, echarts@^5.0.0:
   version "5.0.0"
-  resolved "https://registry.npm.taobao.org/echarts/download/echarts-5.0.0.tgz?cache=0&sync_timestamp=1606890707379&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fecharts%2Fdownload%2Fecharts-5.0.0.tgz#66ec0ea47e3c93b2aadfbb2d719869932ad13ce0"
+  resolved "https://registry.npm.taobao.org/echarts/download/echarts-5.0.0.tgz?cache=0&sync_timestamp=1610775960050&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fecharts%2Fdownload%2Fecharts-5.0.0.tgz#66ec0ea47e3c93b2aadfbb2d719869932ad13ce0"
   integrity sha1-ZuwOpH48k7Kq37stcZhpkyrRPOA=
   dependencies:
     tslib "1.10.0"
@@ -1951,7 +2012,7 @@ fis3-server-node@0.1.3:
     serve-index "1.5.0"
     yog-devtools "0.1.1"
 
-fis3@^3.4.41:
+fis3@^3.4.44:
   version "3.4.44"
   resolved "https://registry.npm.taobao.org/fis3/download/fis3-3.4.44.tgz#d09bddfefcb1dad06838d9526a02bc71a2dd72f9"
   integrity sha1-0Jvd/vyx2tBoONlSagK8caLdcvk=
@@ -3219,6 +3280,11 @@ mkdirp@0.5.x, mkdirp@0.x.x, "mkdirp@>=0.5 0", mkdirp@^0.5.0, mkdirp@^0.5.1:
   dependencies:
     minimist "^1.2.5"
 
+mkdirp@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.npm.taobao.org/mkdirp/download/mkdirp-1.0.4.tgz?cache=0&sync_timestamp=1604053732604&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fmkdirp%2Fdownload%2Fmkdirp-1.0.4.tgz#3eb5ed62622756d79a5f0e2a221dfebad75c2f7e"
+  integrity sha1-PrXtYmInVteaXw4qIh3+utdcL34=
+
 mobx-react-lite@^2.2.0:
   version "2.2.2"
   resolved "https://registry.npm.taobao.org/mobx-react-lite/download/mobx-react-lite-2.2.2.tgz#87c217dc72b4e47b22493daf155daf3759f868a6"
@@ -3617,6 +3683,11 @@ path-to-regexp@^1.7.0:
   integrity sha1-iHs7qdhDk+h6CgufTLdWGYtTVIo=
   dependencies:
     isarray "0.0.1"
+
+path-to-regexp@^6.2.0:
+  version "6.2.0"
+  resolved "https://registry.npm.taobao.org/path-to-regexp/download/path-to-regexp-6.2.0.tgz#f7b3803336104c346889adece614669230645f38"
+  integrity sha1-97OAMzYQTDRoia3s5hRmkjBkXzg=
 
 performance-now@^2.1.0:
   version "2.1.0"
