@@ -7,6 +7,7 @@ import {IMainStore} from '../store';
 
 import '../renderer/MyRenderer';
 import '../renderer/SteedosObjectCRUDRenderer';
+import '../renderer/SteedosObjectFormRenderer';
 import LayoutInRouter from './layout';
 
 const Page = React.lazy(() => import('./page'));

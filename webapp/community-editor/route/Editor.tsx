@@ -10,6 +10,9 @@ import {Layout, Switch, classnames as cx, toast} from 'amis';
 // import '../renderer/SteedosObjectCRUDRenderer';
 // import '../editor/SteedosObjectCRUD';
 
+import '../renderer/SteedosObjectFormRenderer';
+import '../editor/SteedosObjectForm';
+
 let currentIndex = '-1';
 
 let host = `${window.location.protocol}//${window.location.host}`;
