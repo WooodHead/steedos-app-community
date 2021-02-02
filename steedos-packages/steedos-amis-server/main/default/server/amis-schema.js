@@ -2,6 +2,13 @@ const _ = require('underscore');
 const objectql = require('@steedos/objectql');
 const graphql = require('./graphql');
 
+/**
+ * 
+ * @param {*} mainObjectName 
+ * @param {*} recordId : 可以为record：doc
+ * @param {*} readonly 
+ * @param {*} userSession 
+ */
 function getSchema(mainObjectName, recordId, readonly, userSession) {
     const object = objectql.getObject(mainObjectName).toConfig();
     return convertSObjectToAmisSchema(object, recordId, readonly);
@@ -23,44 +30,61 @@ function getPermissionFields(object, userSession){
 }
 
 function convertSObjectToAmisSchema(object, recordId, readonly, userSession) {
-    const controls = [];
+    const fieldControls = [];
     const permissionFields = getPermissionFields(object, userSession)
     _.each(permissionFields, function(field){
         if(!field.hidden){
-            controls.push(convertSFieldToAmisFieldType(field, readonly))
+            fieldControls.push(convertSFieldToAmisField(field, readonly))
         }
     })
+
     return {
         type: 'page',
         body: [
             {
                 type: "form",
+                mode: "horizontal",
                 initApi: getInitApi(object, recordId, permissionFields),
                 initFetch: true,
-                controls: controls
+                controls: fieldControls,
+                className: "grid grid-cols-2 gap-4"
             }
         ]
     }
 }
 
-function convertSFieldToAmisFieldType(field, readonly) {
-    const baseData = {name: field.name, label: field.label};
+function getAmisFieldType(type, readonly){
+    if(!readonly){
+        return type;
+    }
+    if(_.include(['date', 'time', 'text', 'switch'], type)){
+        return `static-${type}`;
+    }else{
+        return 'static';
+    }
+}
+
+function convertSFieldToAmisField(field, readonly) {
+    const baseData = {name: field.name, label: field.label, labelRemark: field.inlineHelpText};
     let convertData = {};
+    if(field.is_wide){
+        convertData.className = 'col-span-2';
+    }
     switch (field.type) {
         case 'text':
-            convertData.type = 'text';
+            convertData.type = getAmisFieldType('text', readonly);
             break;
         case 'textarea':
-            convertData.type = 'textarea'
+            convertData.type = getAmisFieldType('textarea', readonly);
             break;
         case 'html':
             convertData = {
-                type: 'html'
+                type: getAmisFieldType('html', readonly)
             }
             break;
         case 'select':
             convertData = {
-                type: 'select',
+                type: getAmisFieldType('select', readonly),
                 joinValues: false,
                 options: field.options
             }
@@ -74,27 +98,27 @@ function convertSFieldToAmisFieldType(field, readonly) {
             break;
         case 'boolean':
             convertData = {
-                type: 'switch',
+                type: getAmisFieldType('switch', readonly),
                 option: field.inlineHelpText
             }
             break;
         case 'date':
             convertData = {
-                type: 'date',
+                type: getAmisFieldType('date', readonly),
                 format: "YYYY-MM-DD",
                 valueFormat:'YYYY-MM-DDT00:00:00.000[Z]'
             }
             break;
         case 'datetime':
             convertData = {
-                type: 'datetime',
+                type: getAmisFieldType('datetime', readonly),
                 format: 'YYYY-MM-DD HH:mm',
                 valueFormat:'YYYY-MM-DDTHH:mm:ss.SSS[Z]'
             }
             break;
         case 'number':
             convertData = {
-                type: 'number',
+                type: getAmisFieldType('number', readonly),
                 min: field.min,
                 max: field.max,
                 precision: field.precision
@@ -103,7 +127,7 @@ function convertSFieldToAmisFieldType(field, readonly) {
         case 'currency':
             //TODO
             convertData = {
-                type: 'number',
+                type: getAmisFieldType('number', readonly),
                 min: field.min,
                 max: field.max,
                 precision: field.precision
@@ -112,7 +136,7 @@ function convertSFieldToAmisFieldType(field, readonly) {
         case 'percent':
             //TODO
             convertData = {
-                type: 'number',
+                type: getAmisFieldType('number', readonly),
                 min: field.min,
                 max: field.max,
                 precision: field.precision
@@ -120,7 +144,7 @@ function convertSFieldToAmisFieldType(field, readonly) {
             break;
         case 'password':
             convertData = {
-                type: 'password'
+                type: getAmisFieldType('password', readonly)
             }
             break;
         case 'lookup':
@@ -134,12 +158,12 @@ function convertSFieldToAmisFieldType(field, readonly) {
             break;
         case 'url':
             convertData = {
-                type: 'url'
+                type: getAmisFieldType('url', readonly)
             }
             break;
         case 'email':
             convertData = {
-                type: 'email'
+                type: getAmisFieldType('email', readonly)
             }
             break;
         case 'image':
@@ -157,9 +181,6 @@ function convertSFieldToAmisFieldType(field, readonly) {
             break;
     }
     if(!_.isEmpty(convertData)){
-        if(readonly){
-            convertData.type = `static-${convertData.type}`;
-        }
         return Object.assign({}, baseData, convertData);
     }
     
