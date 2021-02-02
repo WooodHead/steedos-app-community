@@ -1,16 +1,5 @@
-import {Renderer} from 'amis';
-import {isApiOutdated, isEffectiveApi} from 'amis/lib/utils/api';
-import {
-  promisify,
-  difference,
-  until,
-  noop,
-  isObject,
-  isVisible,
-  cloneObject,
-  SkipOperation,
-  isEmpty
-} from 'amis/lib/utils/helper'
+import { Renderer } from 'amis';
+import { isEffectiveApi } from 'amis/lib/utils/api';
 import { RendererProps } from 'amis/lib/factory';
 import React from 'react';
 import AMISRenderer from '../component/AMISRenderer';
