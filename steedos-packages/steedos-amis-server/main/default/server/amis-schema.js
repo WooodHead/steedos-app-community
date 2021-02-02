@@ -64,6 +64,81 @@ function getAmisFieldType(type, readonly){
     }
 }
 
+function lookupToAmisPicker(field, readonly){
+    const refObject = objectql.getObject(field.reference_to).toConfig();
+    const data = {
+        type: getAmisFieldType('picker', readonly),
+        labelField: 'name', //TODO
+        valueField: '_id', //TODO
+        modalMode: 'drawer', //TODO 设置 dialog 或者 drawer，用来配置弹出方式
+        source: getApi(refObject, null, refObject.fields, {alias: 'rows'}),
+        pickerSchema: {
+            mode: "table",
+            name: "thelist",
+            draggable: true,
+            columns: [
+                {
+                    "name": "_id",
+                    "label": "_id",
+                    "sortable": true,
+                    "searchable": true,
+                    "type": "text",
+                    "toggled": true
+                },
+                {
+                    "name": "name",
+                    "label": "Name",
+                    "sortable": true,
+                    "searchable": true,
+                    "type": "text",
+                    "toggled": true
+                }
+            ]
+        }
+    }
+    if(field.multiple){
+        data.multiple = true
+        data.extractValue = true
+    }
+    return data;
+}
+
+function lookupToAmisSelect(field, readonly){
+    const refObject = objectql.getObject(field.reference_to).toConfig();
+
+    const apiInfo = getApi(refObject, null, refObject.fields, {alias: 'options', queryOptions: `filters: {__filters}, top: {__top}`})
+    apiInfo.data.$term = "$term";
+    apiInfo.data.$value = `"$${field.name}._id"`;
+    // [["_id", "=", "$${field.name}._id"],"or",["name", "contains", "$term"]]
+    apiInfo.requestAdaptor = `console.log(api.data, api);
+        var filters = '';
+        var top = 10;
+        if(api.data.$term){
+            filters = '["name", "contains", "'+ api.data.$term +'"]';
+        }else if(api.data.$value){
+            filters = '["_id", "=", '+ api.data.$value +']';
+        }
+        api.data.query = api.data.query.replace('{__filters}', filters).replace('{__top}', top);
+        return api;
+    `
+
+    const data = {
+        type: getAmisFieldType('select', readonly),
+        joinValues: false,
+        labelField: 'name',
+        valueField: '_id',
+        autoComplete: apiInfo,
+    }
+    if(_.has(field, 'defaultValue')){
+        data.value = field.defaultValue
+    }
+    if(field.multiple){
+        data.multiple = true
+        data.extractValue = true
+    }
+    return data;
+}
+
 function convertSFieldToAmisField(field, readonly) {
     const baseData = {name: field.name, label: field.label, labelRemark: field.inlineHelpText};
     let convertData = {};
@@ -121,7 +196,7 @@ function convertSFieldToAmisField(field, readonly) {
                 type: getAmisFieldType('number', readonly),
                 min: field.min,
                 max: field.max,
-                precision: field.precision
+                precision: field.scale
             }
             break;
         case 'currency':
@@ -130,7 +205,7 @@ function convertSFieldToAmisField(field, readonly) {
                 type: getAmisFieldType('number', readonly),
                 min: field.min,
                 max: field.max,
-                precision: field.precision
+                precision: field.scale
             }
             break;
         case 'percent':
@@ -139,7 +214,7 @@ function convertSFieldToAmisField(field, readonly) {
                 type: getAmisFieldType('number', readonly),
                 min: field.min,
                 max: field.max,
-                precision: field.precision
+                precision: field.scale
             }
             break;
         case 'password':
@@ -148,10 +223,10 @@ function convertSFieldToAmisField(field, readonly) {
             }
             break;
         case 'lookup':
-            //TODO
+            convertData = lookupToAmisSelect(field, readonly)
             break;
         case 'master_detail':
-            //TODO
+            convertData = lookupToAmisSelect(field, readonly)
             break;
         case 'autonumber':
             //TODO
@@ -186,11 +261,11 @@ function convertSFieldToAmisField(field, readonly) {
     
 }
 
-function getApi(object, recordId, fields){
+function getApi(object, recordId, fields, options){
     return {
         method: "post",
         url: "http://127.0.0.1:8088/graphql",
-        data: graphql.getFindOneQuery(object, recordId, fields)
+        data: graphql.getFindOneQuery(object, recordId, fields, options)
     }
 }
 
