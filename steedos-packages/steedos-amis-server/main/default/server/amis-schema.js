@@ -108,15 +108,15 @@ function lookupToAmisSelect(field, readonly){
 
     const apiInfo = getApi(refObject, null, refObject.fields, {alias: 'options', queryOptions: `filters: {__filters}, top: {__top}`})
     apiInfo.data.$term = "$term";
-    apiInfo.data.$value = `"$${field.name}._id"`;
+    apiInfo.data.$value = `$${field.name}._id`;
     // [["_id", "=", "$${field.name}._id"],"or",["name", "contains", "$term"]]
-    apiInfo.requestAdaptor = `console.log(api.data, api);
-        var filters = '';
+    apiInfo.requestAdaptor = `
+        var filters = '[]';
         var top = 10;
         if(api.data.$term){
             filters = '["name", "contains", "'+ api.data.$term +'"]';
         }else if(api.data.$value){
-            filters = '["_id", "=", '+ api.data.$value +']';
+            filters = '["_id", "=", "'+ api.data.$value +'"]';
         }
         api.data.query = api.data.query.replace('{__filters}', filters).replace('{__top}', top);
         return api;
