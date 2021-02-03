@@ -32,4 +32,9 @@ function getFindOneQuery(object, recordId, fields, options){
     }
 }
 
-exports.getFindOneQuery = getFindOneQuery
+function getSaveQuery(object, recordId, fields, options){
+
+}
+
+exports.getFindOneQuery = getFindOneQuery;
+exports.getSaveQuery = getSaveQuery;

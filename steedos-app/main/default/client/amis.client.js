@@ -34,5 +34,17 @@
       test: /(^|\/)my-custom/
     })(CustomComponent);
 
+    window.getSObjectAmisFormSchema = function(objectName, recordId, readonly){
+      let api = `/api/amis/schema/${objectName}/${recordId}`;
+      if(readonly){
+        api = `${api}?readonly`;
+      }
+      return Steedos.authRequest(api, {async: false}).schema;
+    }
+
+    window.AmisEmbed = function(tagger, schema){
+      return SteedosAmis.embed(tagger, schema);
+    }
+
 });
 })();
