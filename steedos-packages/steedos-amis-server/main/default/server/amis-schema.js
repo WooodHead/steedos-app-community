@@ -40,6 +40,7 @@ function convertSObjectToAmisSchema(object, recordId, readonly, userSession) {
 
     return {
         type: 'page',
+        bodyClassName: 'p-0',
         body: [
             {
                 type: "form",
@@ -49,7 +50,8 @@ function convertSObjectToAmisSchema(object, recordId, readonly, userSession) {
                 initApi: getInitApi(object, recordId, permissionFields),
                 initFetch: true,
                 controls: fieldControls,
-                className: "grid grid-cols-2 gap-4"
+                panelClassName:'m-0',
+                className: "grid grid-cols-2 row-gap-1 col-gap-6 "
             }
         ]
     }
@@ -144,15 +146,13 @@ function lookupToAmisSelect(field, readonly){
 function convertSFieldToAmisField(field, readonly) {
     const baseData = {name: field.name, label: field.label, labelRemark: field.inlineHelpText};
     let convertData = {};
-    if(field.is_wide){
-        convertData.className = 'col-span-2';
-    }
     switch (field.type) {
         case 'text':
             convertData.type = getAmisFieldType('text', readonly);
             break;
         case 'textarea':
             convertData.type = getAmisFieldType('textarea', readonly);
+            convertData.tpl = `<b><%=data.${field.name}%></b>`;
             break;
         case 'html':
             convertData = {
@@ -258,6 +258,12 @@ function convertSFieldToAmisField(field, readonly) {
             break;
     }
     if(!_.isEmpty(convertData)){
+        if(field.is_wide){
+            convertData.className = 'col-span-2 slds-form-element_readonly m-0';
+        }else{
+            convertData.className = 'slds-form-element_readonly m-0';
+        }
+        convertData.labelClassName = 'text-left';
         return Object.assign({}, baseData, convertData);
     }
     
