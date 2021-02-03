@@ -44,6 +44,8 @@ function convertSObjectToAmisSchema(object, recordId, readonly, userSession) {
             {
                 type: "form",
                 mode: "horizontal",
+                title: "",
+                submitText:"",
                 initApi: getInitApi(object, recordId, permissionFields),
                 initFetch: true,
                 controls: fieldControls,
