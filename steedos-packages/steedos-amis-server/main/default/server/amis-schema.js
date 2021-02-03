@@ -38,6 +38,11 @@ function convertSObjectToAmisSchema(object, recordId, readonly, userSession) {
         }
     })
 
+    let gapClassName = 'row-gap-1';
+    if(!readonly){
+        gapClassName = 'row-gap-4'
+    }
+
     return {
         type: 'page',
         bodyClassName: 'p-0',
@@ -45,13 +50,15 @@ function convertSObjectToAmisSchema(object, recordId, readonly, userSession) {
             {
                 type: "form",
                 mode: "horizontal",
+                debug: false,
                 title: "",
                 submitText:"",
+                api: getSaveApi(object, recordId, permissionFields, {}),
                 initApi: getInitApi(object, recordId, permissionFields),
                 initFetch: true,
                 controls: fieldControls,
                 panelClassName:'m-0',
-                className: "grid grid-cols-2 row-gap-1 col-gap-6 "
+                className: `grid grid-cols-2 ${gapClassName} col-gap-6`
             }
         ]
     }
@@ -259,14 +266,28 @@ function convertSFieldToAmisField(field, readonly) {
     }
     if(!_.isEmpty(convertData)){
         if(field.is_wide){
-            convertData.className = 'col-span-2 slds-form-element_readonly m-0';
+            convertData.className = 'col-span-2 m-0';
         }else{
-            convertData.className = 'slds-form-element_readonly m-0';
+            convertData.className = 'm-0';
+        }
+        if(readonly){
+            convertData.className = `${convertData.className} slds-form-element_readonly`
         }
         convertData.labelClassName = 'text-left';
+        if(readonly){
+            convertData.quickEdit = true;
+        }
         return Object.assign({}, baseData, convertData);
     }
     
+}
+
+function getSaveApi(object, recordId, fields, options){
+    return {
+        method: 'post',
+        url: 'http://127.0.0.1:8088/graphql',
+        data: graphql.getSaveQuery(object, recordId, fields, options)
+    }
 }
 
 function getApi(object, recordId, fields, options){
