@@ -2,6 +2,7 @@ const _ = require('underscore');
 const objectql = require('@steedos/objectql');
 const graphql = require('./graphql');
 const steedosI18n = require("@steedos/i18n");
+const clone = require('clone');
 
 /**
  * 
@@ -12,7 +13,7 @@ const steedosI18n = require("@steedos/i18n");
  * @param {*} userSession 
  */
 function getSchema(mainObjectName, recordId, readonly, userSession) {
-    const object = objectql.getObject(mainObjectName).toConfig();
+    const object = clone(objectql.getObject(mainObjectName).toConfig());
     let lng = objectql.getUserLocale(userSession);
     steedosI18n.translationObject(lng, object.name, object)
     return convertSObjectToAmisSchema(object, recordId, readonly);
@@ -78,7 +79,7 @@ function convertSObjectToAmisSchema(object, recordId, readonly, userSession) {
             {
                 type: "form",
                 mode: "horizontal",
-                debug: false,
+                debug: true,
                 title: "",
                 submitText:"",
                 api: getSaveApi(object, recordId, permissionFields, {}),
@@ -107,7 +108,7 @@ function lookupToAmisPicker(field, readonly){
     if(!field.reference_to){
         return ;
     }
-    const refObject = objectql.getObject(field.reference_to).toConfig();
+    const refObject = clone(objectql.getObject(field.reference_to).toConfig());
     const data = {
         type: getAmisFieldType('picker', readonly),
         labelField: refObject.NAME_FIELD_KEY || 'name', //TODO
@@ -149,7 +150,7 @@ function lookupToAmisSelect(field, readonly){
     if(!field.reference_to){
         return ;
     }
-    const refObject = objectql.getObject(field.reference_to).toConfig();
+    const refObject = clone(objectql.getObject(field.reference_to).toConfig());
 
     const apiInfo = getApi(refObject, null, refObject.fields, {alias: 'options', queryOptions: `filters: {__filters}, top: {__top}`})
     apiInfo.data.$term = "$term";
@@ -186,6 +187,7 @@ function lookupToAmisSelect(field, readonly){
     const data = {
         type: getAmisFieldType('select', readonly),
         joinValues: false,
+        extractValue: true,
         labelField: labelField,
         valueField: valueField,
         autoComplete: apiInfo,
@@ -312,6 +314,7 @@ function convertSFieldToAmisField(field, readonly) {
         case 'grid':
             convertData = {
                 type: 'table',
+                strictMode:false,
                 editable: true,
                 addable: true,
                 removable: true,
@@ -319,12 +322,13 @@ function convertSFieldToAmisField(field, readonly) {
                 columns: []
             }
             _.each(field.subFields, function(subField){
-                const gridSub = convertSFieldToAmisField(Object.assign({}, subField, {name: subField.name.replace(`${field.name}.$.`, '').replace(`${field.name}.`, '')}), readonly);
+                const subFieldName = subField.name.replace(`${field.name}.$.`, '').replace(`${field.name}.`, '');
+                const gridSub = convertSFieldToAmisField(Object.assign({}, subField, {name: subFieldName}), readonly);
                 if(gridSub){
                     delete gridSub.name
                     delete gridSub.label
                     convertData.columns.push({
-                        name: subField.name,
+                        name: subFieldName,
                         label: subField.label,
                         quickEdit: gridSub
                     })
@@ -347,7 +351,7 @@ function convertSFieldToAmisField(field, readonly) {
         }
         convertData.labelClassName = 'text-left';
         if(readonly){
-            convertData.quickEdit = true;
+            convertData.quickEdit = false;
         }
         return Object.assign({}, baseData, convertData);
     }
