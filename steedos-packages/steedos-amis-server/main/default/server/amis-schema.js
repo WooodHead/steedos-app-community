@@ -1,6 +1,7 @@
 const _ = require('underscore');
 const objectql = require('@steedos/objectql');
 const graphql = require('./graphql');
+const steedosI18n = require("@steedos/i18n");
 
 /**
  * 
@@ -12,6 +13,8 @@ const graphql = require('./graphql');
  */
 function getSchema(mainObjectName, recordId, readonly, userSession) {
     const object = objectql.getObject(mainObjectName).toConfig();
+    let lng = objectql.getUserLocale(userSession);
+    steedosI18n.translationObject(lng, object.name, object)
     return convertSObjectToAmisSchema(object, recordId, readonly);
 }
 
@@ -101,12 +104,15 @@ function getAmisFieldType(type, readonly){
 }
 
 function lookupToAmisPicker(field, readonly){
+    if(!field.reference_to){
+        return ;
+    }
     const refObject = objectql.getObject(field.reference_to).toConfig();
     const data = {
         type: getAmisFieldType('picker', readonly),
-        labelField: 'name', //TODO
-        valueField: '_id', //TODO
-        modalMode: 'drawer', //TODO 设置 dialog 或者 drawer，用来配置弹出方式
+        labelField: refObject.NAME_FIELD_KEY || 'name', //TODO
+        valueField: field.reference_to_field || '_id', //TODO
+        modalMode: 'dialog', //TODO 设置 dialog 或者 drawer，用来配置弹出方式
         source: getApi(refObject, null, refObject.fields, {alias: 'rows'}),
         pickerSchema: {
             mode: "table",
@@ -140,11 +146,17 @@ function lookupToAmisPicker(field, readonly){
 }
 
 function lookupToAmisSelect(field, readonly){
+    if(!field.reference_to){
+        return ;
+    }
     const refObject = objectql.getObject(field.reference_to).toConfig();
 
     const apiInfo = getApi(refObject, null, refObject.fields, {alias: 'options', queryOptions: `filters: {__filters}, top: {__top}`})
     apiInfo.data.$term = "$term";
     apiInfo.data.$value = `$${field.name}._id`;
+    _.each(field.depend_on, function(fName){
+        apiInfo.data[fName] = `$${fName}`;
+    })
     // [["_id", "=", "$${field.name}._id"],"or",["name", "contains", "$term"]]
     apiInfo.requestAdaptor = `
         var filters = '[]';
@@ -157,12 +169,25 @@ function lookupToAmisSelect(field, readonly){
         api.data.query = api.data.query.replace('{__filters}', filters).replace('{__top}', top);
         return api;
     `
+    let labelField = refObject.NAME_FIELD_KEY || 'name';
+    let valueField = field.reference_to_field || '_id';
+    if(field.optionsFunction){
+        console.log('optionsFunction', field.optionsFunction);
+        apiInfo.adaptor = `
+        console.log('api.data', api.data);
+        payload.data.options = eval(${field.optionsFunction.toString()})(api.data);
+        console.log('payload.data', payload.data);
+        return payload;
+        `
+        labelField = 'label';
+        valueField = 'value';
+    }
 
     const data = {
         type: getAmisFieldType('select', readonly),
         joinValues: false,
-        labelField: 'name',
-        valueField: '_id',
+        labelField: labelField,
+        valueField: valueField,
         autoComplete: apiInfo,
     }
     if(_.has(field, 'defaultValue')){
@@ -296,9 +321,11 @@ function convertSFieldToAmisField(field, readonly) {
             _.each(field.subFields, function(subField){
                 const gridSub = convertSFieldToAmisField(Object.assign({}, subField, {name: subField.name.replace(`${field.name}.$.`, '').replace(`${field.name}.`, '')}), readonly);
                 if(gridSub){
+                    delete gridSub.name
+                    delete gridSub.label
                     convertData.columns.push({
-                        name: gridSub.name,
-                        label: gridSub.label,
+                        name: subField.name,
+                        label: subField.label,
                         quickEdit: gridSub
                     })
                 }
