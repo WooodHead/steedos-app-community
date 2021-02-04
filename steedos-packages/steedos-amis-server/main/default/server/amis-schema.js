@@ -5,6 +5,7 @@ const graphql = require('./graphql');
 /**
  * 
  * @param {*} mainObjectName 
+ * @param {*} fields : TODO
  * @param {*} recordId : 可以为record：doc
  * @param {*} readonly 
  * @param {*} userSession 
@@ -29,11 +30,35 @@ function getPermissionFields(object, userSession){
     return permissionFields;
 }
 
+function getObjectFieldSubFields(mainField, fields){
+    const newMainField = Object.assign({subFields: []}, mainField);
+    const subFields = _.filter(fields, function(field){
+        return field.name.startsWith(`${mainField.name}.`)
+    });
+    newMainField.subFields = subFields;
+    return newMainField;
+}
+
+function getGridFieldSubFields(mainField, fields){
+    const newMainField = Object.assign({subFields: []}, mainField);
+    const subFields = _.filter(fields, function(field){
+        return field.name.startsWith(`${mainField.name}.`)
+    });
+    newMainField.subFields = subFields;
+    return newMainField;
+}
+
 function convertSObjectToAmisSchema(object, recordId, readonly, userSession) {
     const fieldControls = [];
     const permissionFields = getPermissionFields(object, userSession)
-    _.each(permissionFields, function(field){
-        if(!field.hidden){
+    _.each(permissionFields, function(perField){
+        let field = perField;
+        if(perField.type === 'grid'){
+            field = getGridFieldSubFields(perField, permissionFields);
+        }else if(perField.type === 'object'){
+            field = getObjectFieldSubFields(perField, permissionFields);
+        }
+        if(field.name.indexOf(".") < 0){
             fieldControls.push(convertSFieldToAmisField(field, readonly))
         }
     })
@@ -235,7 +260,7 @@ function convertSFieldToAmisField(field, readonly) {
             convertData = lookupToAmisSelect(field, readonly)
             break;
         case 'master_detail':
-            convertData = lookupToAmisSelect(field, readonly)
+            convertData = lookupToAmisPicker(field, readonly)
             break;
         case 'autonumber':
             //TODO
@@ -258,6 +283,26 @@ function convertSFieldToAmisField(field, readonly) {
             break;
         case 'summary':
             //TODO
+            break;
+        case 'grid':
+            convertData = {
+                type: 'table',
+                editable: true,
+                addable: true,
+                removable: true,
+                draggable: true,
+                columns: []
+            }
+            _.each(field.subFields, function(subField){
+                const gridSub = convertSFieldToAmisField(Object.assign({}, subField, {name: subField.name.replace(`${field.name}.$.`, '').replace(`${field.name}.`, '')}), readonly);
+                if(gridSub){
+                    convertData.columns.push({
+                        name: gridSub.name,
+                        label: gridSub.label,
+                        quickEdit: gridSub
+                    })
+                }
+            })
             break;
         default:
             console.log('convertData default', field.type);
