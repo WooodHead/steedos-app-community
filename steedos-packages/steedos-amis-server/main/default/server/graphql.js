@@ -33,8 +33,37 @@ function getFindOneQuery(object, recordId, fields, options){
 }
 
 function getSaveQuery(object, recordId, fields, options){
+    return {
+        query: `mutation {
+            ${object.name}__update(_id:"${recordId}", data: {__saveData}){_id}
+        }`,
+        $: "$$"
+    }
+}
 
+function getSaveDataTpl(){
+    return `
+        const formData = api.data.$;
+        const fieldsName = Object.keys(formData);
+        let __saveData = JSON.stringify(JSON.stringify(formData));;
+        // fieldsName.forEach(function(fName){
+        //     __saveData = __saveData + \`\${fName}:\${formData[fName]},\`
+        // });
+    `
+}
+
+function getSaveRequestAdaptor(){
+    return `
+        console.log('this', this);
+        console.log('api', api);
+        console.log('api data', api.data);
+        ${getSaveDataTpl()}
+        console.log('__saveData', __saveData);
+        api.data.query = api.data.query.replace('{__saveData}', __saveData);
+        return api;
+    `
 }
 
 exports.getFindOneQuery = getFindOneQuery;
 exports.getSaveQuery = getSaveQuery;
+exports.getSaveRequestAdaptor = getSaveRequestAdaptor;

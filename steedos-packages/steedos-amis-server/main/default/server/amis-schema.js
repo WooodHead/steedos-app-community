@@ -79,9 +79,9 @@ function convertSObjectToAmisSchema(object, recordId, readonly, userSession) {
             {
                 type: "form",
                 mode: "horizontal",
-                debug: true,
+                debug: false,
                 title: "",
-                submitText:"",
+                submitText: readonly ? "":"提交",
                 api: getSaveApi(object, recordId, permissionFields, {}),
                 initApi: getInitApi(object, recordId, permissionFields),
                 initFetch: true,
@@ -362,7 +362,8 @@ function getSaveApi(object, recordId, fields, options){
     return {
         method: 'post',
         url: 'http://127.0.0.1:8088/graphql',
-        data: graphql.getSaveQuery(object, recordId, fields, options)
+        data: graphql.getSaveQuery(object, recordId, fields, options),
+        requestAdaptor: graphql.getSaveRequestAdaptor()
     }
 }
 
