@@ -10,6 +10,10 @@ function getFieldsTemplate(fields){
             }else{
                 fieldsName.push(field.name)
             }
+
+            if(field.type === 'date' || field.type == 'datetime'){
+                fieldsName.push(`${field.name}__label`)
+            }
         }
     })
     return `${fieldsName.join(' ')}`

@@ -35,15 +35,17 @@
     })(CustomComponent);
 
     window.getSObjectAmisFormSchema = function(objectName, recordId, readonly){
-      let api = `/api/amis/schema/${objectName}/${recordId}`;
+      let api = `/api/amis/schema/${objectName}/${recordId}?t=${(new Date()).getTime()}`;
       if(readonly){
-        api = `${api}?readonly`;
+        api = `${api}&readonly`;
       }
       return Steedos.authRequest(api, {async: false}).schema;
     }
 
     window.AmisEmbed = function(tagger, schema){
-      return SteedosAmis.embed(tagger, schema);
+      $(tagger).children().remove();
+      $(tagger).append(`<div class='${schema.name}'></div>`)
+      return SteedosAmis.embed(`.${schema.name}`, schema);
     }
 
 });

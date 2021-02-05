@@ -1,10 +1,10 @@
 const objectql = require('@steedos/objectql');
 function getCreatedInfoTpl(){
-    return "<div><a href='/app/admin/users/view/${created_by._id}'>${created_by.name}</a> ${created}</div>"
+    return "<div><a href='/app/admin/users/view/${created_by._id}'>${created_by.name}</a> ${created__label}</div>"
 }
 
 function getModifiedInfoTpl(){
-    return "<div><a href='/app/admin/users/view/${modified_by._id}'>${modified_by.name}</a> ${modified}</div>"
+    return "<div><a href='/app/admin/users/view/${modified_by._id}'>${modified_by.name}</a> ${modified__label}</div>"
 }
 
 function getRefObjectNameFieldName(field){

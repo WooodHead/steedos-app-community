@@ -84,22 +84,24 @@ function convertSObjectToAmisSchema(object, recordId, readonly, userSession) {
         type: 'page',
         bodyClassName: 'p-0',
         page: `page_${readonly ? 'readonly':'edit'}_${recordId}`,
-        initApi: getInitApi(object, recordId, permissionFields, readonly),
-        initFetch: true,
+        initApi: readonly ? getInitApi(object, recordId, permissionFields, readonly) : null,
+        initFetch: readonly ? true : null,
         body: [
             {
                 type: "form",
                 mode: "horizontal",
+                reload: `page_${readonly ? 'readonly':'edit'}_${recordId}`,
                 name: `form_${readonly ? 'readonly':'edit'}_${recordId}`,
-                debug: true,
+                debug: false,
                 title: "",
-                submitText: readonly ? "":"提交",
-                api: getSaveApi(object, recordId, permissionFields, {}),
-                // initApi: getInitApi(object, recordId, permissionFields, readonly),
-                // initFetch: true,
+                api: readonly ? null : getSaveApi(object, recordId, permissionFields, {}),
+                initApi: readonly ? null : getInitApi(object, recordId, permissionFields, readonly),
+                initFetch: readonly ? null : true,
                 controls: fieldControls,
                 panelClassName:'m-0',
                 bodyClassName: 'p-0',
+                actions: readonly ? null : getFormActions(),
+                actionsClassName: readonly ? null : "p-sm b-t b-light text-center",
                 className: `grid grid-cols-2 ${gapClassName} col-gap-6`
             }
         ]
@@ -226,6 +228,32 @@ function lookupToAmisSelect(field, readonly){
     }
 
     return data;
+}
+
+function getFormActions(){
+    return [
+        {
+          "type": "button",
+          "label": "取消",
+          "actionType": "reset",
+          "dialog": {
+            "title": "系统提示",
+            "body": "对你点击了"
+          },
+          "level": "default",
+          "block": false
+        },
+        {
+          "type": "button",
+          "label": "保存",
+          "actionType": "submit",
+          "level": "info",
+          "dialog": {
+            "title": "系统提示",
+            "body": "对你点击了"
+          }
+        }
+      ]
 }
 
 function convertSFieldToAmisField(field, readonly) {
@@ -357,7 +385,7 @@ function convertSFieldToAmisField(field, readonly) {
                     convertData.columns.push({
                         name: subFieldName,
                         label: subField.label,
-                        quickEdit: gridSub
+                        quickEdit: readonly ? false : gridSub
                     })
                 }
             })
