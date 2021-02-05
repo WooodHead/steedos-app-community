@@ -155,7 +155,7 @@ function lookupToAmisPicker(field, readonly){
     if(readonly){
         data.tpl = Tpl.getLookupTpl(field)
     }
-    
+
     return data;
 }
 
@@ -334,10 +334,10 @@ function convertSFieldToAmisField(field, readonly) {
             convertData = {
                 type: 'table',
                 strictMode:false,
-                editable: true,
-                addable: true,
-                removable: true,
-                draggable: true,
+                editable: !readonly,
+                addable: !readonly,
+                removable: !readonly,
+                draggable: !readonly,
                 columns: []
             }
             _.each(field.subFields, function(subField){
