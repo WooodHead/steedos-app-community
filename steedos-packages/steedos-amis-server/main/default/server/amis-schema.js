@@ -94,6 +94,7 @@ function convertSObjectToAmisSchema(object, recordId, readonly, userSession) {
                 initFetch: true,
                 controls: fieldControls,
                 panelClassName:'m-0',
+                bodyClassName: 'p-0',
                 className: `grid grid-cols-2 ${gapClassName} col-gap-6`
             }
         ]
@@ -123,10 +124,12 @@ function lookupToAmisPicker(field, readonly){
         valueField: field.reference_to_field || '_id', //TODO
         modalMode: 'dialog', //TODO 设置 dialog 或者 drawer，用来配置弹出方式
         source: getApi(refObjectConfig, null, refObjectConfig.fields, {alias: 'rows'}),
+        size: "lg",
         pickerSchema: {
             mode: "table",
             name: "thelist",
-            draggable: true,
+            draggable: false,
+            headerToolbar: ['switch-per-page', 'pagination'],
             columns: [
                 {
                     "name": "_id",

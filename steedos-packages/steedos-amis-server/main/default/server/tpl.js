@@ -4,7 +4,7 @@ function getCreatedInfoTpl(){
 }
 
 function getModifiedInfoTpl(){
-    return "<div href='/app/admin/users/view/${modified_by._id}'>${modified_by.name}</a> ${modified}</div>"
+    return "<div><a href='/app/admin/users/view/${modified_by._id}'>${modified_by.name}</a> ${modified}</div>"
 }
 
 function getRefObjectNameFieldName(field){

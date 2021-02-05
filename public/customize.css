@@ -1,10 +1,14 @@
 @import '/amis-sdk/sdk.css';
 
 
-.amis-routes-wrapper{
+/* .amis-routes-wrapper{
     width: 100%;
+} */
+
+.amis-scope{
+    background: none;
 }
 
-.row-main{
+/* .row-main{
     border-radius: 0.25rem
-}
+} */
