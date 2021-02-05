@@ -3,6 +3,9 @@ const objectql = require('@steedos/objectql');
 const graphql = require('./graphql');
 const steedosI18n = require("@steedos/i18n");
 const clone = require('clone');
+const Fields = require('./fields');
+const Tpl = require('./tpl');
+const OMIT_FIELDS = ['created', 'created_by', 'modified', 'modified_by'];
 
 /**
  * 
@@ -67,6 +70,10 @@ function convertSObjectToAmisSchema(object, recordId, readonly, userSession) {
         }
     })
 
+    _.each(Fields.getBaseFields(readonly), function(field){
+        fieldControls.push(field);
+    })
+
     let gapClassName = 'row-gap-1';
     if(!readonly){
         gapClassName = 'row-gap-4'
@@ -79,7 +86,7 @@ function convertSObjectToAmisSchema(object, recordId, readonly, userSession) {
             {
                 type: "form",
                 mode: "horizontal",
-                debug: false,
+                debug: true,
                 title: "",
                 submitText: readonly ? "":"提交",
                 api: getSaveApi(object, recordId, permissionFields, {}),
@@ -108,13 +115,14 @@ function lookupToAmisPicker(field, readonly){
     if(!field.reference_to){
         return ;
     }
-    const refObject = clone(objectql.getObject(field.reference_to).toConfig());
+    const refObject = objectql.getObject(field.reference_to);
+    const refObjectConfig = clone(refObject.toConfig());
     const data = {
         type: getAmisFieldType('picker', readonly),
         labelField: refObject.NAME_FIELD_KEY || 'name', //TODO
         valueField: field.reference_to_field || '_id', //TODO
         modalMode: 'dialog', //TODO 设置 dialog 或者 drawer，用来配置弹出方式
-        source: getApi(refObject, null, refObject.fields, {alias: 'rows'}),
+        source: getApi(refObjectConfig, null, refObjectConfig.fields, {alias: 'rows'}),
         pickerSchema: {
             mode: "table",
             name: "thelist",
@@ -143,6 +151,11 @@ function lookupToAmisPicker(field, readonly){
         data.multiple = true
         data.extractValue = true
     }
+
+    if(readonly){
+        data.tpl = Tpl.getLookupTpl(field)
+    }
+    
     return data;
 }
 
@@ -150,9 +163,10 @@ function lookupToAmisSelect(field, readonly){
     if(!field.reference_to){
         return ;
     }
-    const refObject = clone(objectql.getObject(field.reference_to).toConfig());
+    const refObject = objectql.getObject(field.reference_to);
+    const refObjectConfig = clone(refObject.toConfig());
 
-    const apiInfo = getApi(refObject, null, refObject.fields, {alias: 'options', queryOptions: `filters: {__filters}, top: {__top}`})
+    const apiInfo = getApi(refObjectConfig, null, refObjectConfig.fields, {alias: 'options', queryOptions: `filters: {__filters}, top: {__top}`})
     apiInfo.data.$term = "$term";
     apiInfo.data.$value = `$${field.name}._id`;
     _.each(field.depend_on, function(fName){
@@ -173,7 +187,6 @@ function lookupToAmisSelect(field, readonly){
     let labelField = refObject.NAME_FIELD_KEY || 'name';
     let valueField = field.reference_to_field || '_id';
     if(field.optionsFunction){
-        console.log('optionsFunction', field.optionsFunction);
         apiInfo.adaptor = `
         console.log('api.data', api.data);
         payload.data.options = eval(${field.optionsFunction.toString()})(api.data);
@@ -199,10 +212,16 @@ function lookupToAmisSelect(field, readonly){
         data.multiple = true
         data.extractValue = true
     }
+
+    if(readonly){
+        data.tpl = Tpl.getLookupTpl(field)
+    }
+
     return data;
 }
 
 function convertSFieldToAmisField(field, readonly) {
+    if(_.include(OMIT_FIELDS, field.name)){return}
     const baseData = {name: field.name, label: field.label, labelRemark: field.inlineHelpText};
     let convertData = {};
     switch (field.type) {

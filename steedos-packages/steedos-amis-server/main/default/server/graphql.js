@@ -1,9 +1,15 @@
+const objectql = require('@steedos/objectql');
 function getFieldsTemplate(fields){
     const fieldsName = ['_id'];
     //TODO 此处需要考虑相关对象查询
     _.each(fields, function(field){
-        if(field.name.indexOf('.') < 0 && field.type != 'lookup' && field.type != 'master_detail'){
-            fieldsName.push(field.name)
+        if(field.name.indexOf('.') < 0){
+            if((field.type == 'lookup' || field.type == 'master_detail') && field.reference_to){
+                const NAME_FIELD_KEY = objectql.getObject(field.reference_to).NAME_FIELD_KEY;
+                fieldsName.push(`${field.name}{_id,name,${NAME_FIELD_KEY}}`)
+            }else{
+                fieldsName.push(field.name)
+            }
         }
     })
     return `${fieldsName.join(' ')}`
@@ -45,6 +51,10 @@ function getSaveDataTpl(){
     return `
         const formData = api.data.$;
         const fieldsName = Object.keys(formData);
+        delete formData.created
+        delete formData.created_by
+        delete formData.modified
+        delete formData.modified_by
         let __saveData = JSON.stringify(JSON.stringify(formData));;
         // fieldsName.forEach(function(fName){
         //     __saveData = __saveData + \`\${fName}:\${formData[fName]},\`
