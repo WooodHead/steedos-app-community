@@ -5,6 +5,7 @@ const steedosI18n = require("@steedos/i18n");
 const clone = require('clone');
 const Fields = require('./fields');
 const Tpl = require('./tpl');
+const ObjectRecord = require('./object-record');
 const OMIT_FIELDS = ['created', 'created_by', 'modified', 'modified_by'];
 
 /**
@@ -82,16 +83,20 @@ function convertSObjectToAmisSchema(object, recordId, readonly, userSession) {
     return {
         type: 'page',
         bodyClassName: 'p-0',
+        page: `page_${readonly ? 'readonly':'edit'}_${recordId}`,
+        initApi: getInitApi(object, recordId, permissionFields, readonly),
+        initFetch: true,
         body: [
             {
                 type: "form",
                 mode: "horizontal",
+                name: `form_${readonly ? 'readonly':'edit'}_${recordId}`,
                 debug: true,
                 title: "",
                 submitText: readonly ? "":"提交",
                 api: getSaveApi(object, recordId, permissionFields, {}),
-                initApi: getInitApi(object, recordId, permissionFields),
-                initFetch: true,
+                // initApi: getInitApi(object, recordId, permissionFields, readonly),
+                // initFetch: true,
                 controls: fieldControls,
                 panelClassName:'m-0',
                 bodyClassName: 'p-0',
@@ -397,12 +402,11 @@ function getApi(object, recordId, fields, options){
     }
 }
 
-function getInitApi(object, recordId, fields){
-    return {
-        method: "post",
-        url: "http://127.0.0.1:8088/graphql",
-        adaptor: "payload.data = payload.data.data[0];return payload",
-        data: graphql.getFindOneQuery(object, recordId, fields)
+function getInitApi(object, recordId, fields, readonly){
+    if(readonly){
+        return ObjectRecord.getReadonlyFormInitApi(object, recordId, fields);
+    }else{
+        return ObjectRecord.getEditFormInitApi(object, recordId, fields);
     }
 }
 
