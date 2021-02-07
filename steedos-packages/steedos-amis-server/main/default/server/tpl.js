@@ -26,6 +26,9 @@ function getSelectTpl(field){
 }
 
 function getLookupTpl(field){
+    if(!field.reference_to){
+        return getSelectTpl(field)
+    }
     const NAME_FIELD_KEY = getRefObjectNameFieldName(field);
     if(field.multiple){
         return `

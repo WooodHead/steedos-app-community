@@ -175,13 +175,27 @@ function lookupToAmisPicker(field, readonly){
 }
 
 function lookupToAmisSelect(field, readonly){
-    if(!field.reference_to){
+    if(!field.reference_to && false){
         return ;
     }
-    const refObject = objectql.getObject(field.reference_to);
-    const refObjectConfig = clone(refObject.toConfig());
 
-    const apiInfo = getApi(refObjectConfig, null, refObjectConfig.fields, {alias: 'options', queryOptions: `filters: {__filters}, top: {__top}`})
+    let refObject, apiInfo;
+
+    if(field.reference_to){
+        refObject = objectql.getObject(field.reference_to);
+        const refObjectConfig = clone(refObject.toConfig());
+    
+        apiInfo = getApi(refObjectConfig, null, refObjectConfig.fields, {alias: 'options', queryOptions: `filters: {__filters}, top: {__top}`})
+    }else{
+        refObject = {};
+        apiInfo = {
+            method: "post",
+            url: graphql.getApi(),
+            data: {query: '{objects(filters: ["_id", "=", "-1"]){_id}}', $: "$$"}
+        }
+    }
+
+    
     apiInfo.data.$term = "$term";
     apiInfo.data.$value = `$${field.name}._id`;
     _.each(field.depend_on, function(fName){
@@ -380,7 +394,7 @@ function convertSFieldToAmisField(field, readonly) {
             convertData = {
                 type: 'table',
                 strictMode:false,
-                needConfirm: false,
+                // needConfirm: true,  此属性设置为false后，导致table不能编辑。
                 editable: !readonly,
                 addable: !readonly,
                 removable: !readonly,
