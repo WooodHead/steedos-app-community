@@ -12,12 +12,11 @@ fields:
     visibleOn: 
 related_lists: 
   - object_name: community_pages
-    visibleOn: 
-    sort:
-      - field: created
-        order: desc
+    sort_field: created
+    sort_order: desc
     field_name:
       - field
       - created
+    visibleOn: 
 profiles:
 template: 
