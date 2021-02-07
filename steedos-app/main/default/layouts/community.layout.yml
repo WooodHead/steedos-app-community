@@ -1,0 +1,23 @@
+name: default
+label: Community Layout
+object: community
+buttons: []
+compact_layout_fields: []
+fields: 
+  - field_name: name
+    is_wide: false
+    readonly: true
+    required: true
+    group: General
+    visibleOn: 
+related_lists: 
+  - object_name: community_pages
+    visibleOn: 
+    sort:
+      - field: created
+        order: desc
+    field_name:
+      - field
+      - created
+profiles:
+template: 
