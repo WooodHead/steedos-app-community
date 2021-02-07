@@ -77,3 +77,12 @@ function getSaveRequestAdaptor(){
 exports.getFindOneQuery = getFindOneQuery;
 exports.getSaveQuery = getSaveQuery;
 exports.getSaveRequestAdaptor = getSaveRequestAdaptor;
+
+
+exports.getApi = function(isMobile){
+    if(isMobile){
+        //TODO 返回 绝对路径
+    }else{
+        return __meteor_runtime_config__.ROOT_URL_PATH_PREFIX + "/graphql"
+    }
+}

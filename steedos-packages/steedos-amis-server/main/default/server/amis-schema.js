@@ -427,7 +427,7 @@ function convertSFieldToAmisField(field, readonly) {
 function getSaveApi(object, recordId, fields, options){
     return {
         method: 'post',
-        url: 'http://127.0.0.1:8088/graphql',
+        url: graphql.getApi(),
         data: graphql.getSaveQuery(object, recordId, fields, options),
         requestAdaptor: graphql.getSaveRequestAdaptor()
     }
@@ -436,7 +436,7 @@ function getSaveApi(object, recordId, fields, options){
 function getApi(object, recordId, fields, options){
     return {
         method: "post",
-        url: "http://127.0.0.1:8088/graphql",
+        url: graphql.getApi(),
         data: graphql.getFindOneQuery(object, recordId, fields, options)
     }
 }

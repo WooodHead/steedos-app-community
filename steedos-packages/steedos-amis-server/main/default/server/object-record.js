@@ -33,7 +33,7 @@ function getReadonlyFormAdaptor(fields){
 function getReadonlyFormInitApi(object, recordId, fields){
     return {
         method: "post",
-        url: "http://127.0.0.1:8088/graphql?rf="+ (new Date()).getTime(),
+        url: graphql.getApi()+"?rf="+ (new Date()).getTime(),
         cache: APICACHE,
         adaptor: getReadonlyFormAdaptor(fields),
         data: graphql.getFindOneQuery(object, recordId, fields)
@@ -66,7 +66,7 @@ function getEditFormInitApi(object, recordId, fields){
 
     return {
         method: "post",
-        url: "http://127.0.0.1:8088/graphql?rf="+ (new Date()).getTime(),
+        url: graphql.getApi()+"?rf="+ (new Date()).getTime(),
         cache: APICACHE,
         adaptor: `
             var data = payload.data.data[0];
