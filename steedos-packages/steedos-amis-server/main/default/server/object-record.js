@@ -86,7 +86,7 @@ function getEditFormInitApi(object, recordId, fields){
             var data = payload.data.data[0];
             ${getConvertDataScriptStr(fields)}
             payload.data = data;
-            console.log('getEditFormInitApi', data);
+            console.log('getEditFormInitApi', payload);
             return payload;
         `,
         data: graphql.getFindOneQuery(object, recordId, fields)

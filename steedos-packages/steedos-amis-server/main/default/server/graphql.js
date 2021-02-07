@@ -11,7 +11,7 @@ function getFieldsTemplate(fields){
                 fieldsName.push(field.name)
             }
 
-            if(field.type === 'date' || field.type == 'datetime'){
+            if(field.type === 'date' || field.type == 'datetime' || field.type == 'boolean'){
                 fieldsName.push(`${field.name}__label`)
             }
         }

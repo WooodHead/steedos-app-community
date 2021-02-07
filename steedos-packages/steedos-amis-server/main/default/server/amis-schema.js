@@ -117,7 +117,7 @@ function getAmisFieldType(type, readonly){
     if(!readonly){
         return type;
     }
-    if(_.include(['date', 'time', 'text', 'switch'], type)){
+    if(_.include(['date', 'time', 'text'], type)){
         return `static-${type}`;
     }else{
         return 'static';
@@ -201,6 +201,8 @@ function lookupToAmisSelect(field, readonly){
     _.each(field.depend_on, function(fName){
         apiInfo.data[fName] = `$${fName}`;
     })
+    apiInfo.data['$'] = `$$`;
+    apiInfo.data['rfield'] = `\${object_name}`;
     // [["_id", "=", "$${field.name}._id"],"or",["name", "contains", "$term"]]
     apiInfo.requestAdaptor = `
         var filters = '[]';
@@ -217,6 +219,7 @@ function lookupToAmisSelect(field, readonly){
     let valueField = field.reference_to_field || '_id';
     if(field.optionsFunction){
         apiInfo.adaptor = `
+        console.log('${field.name} adaptor payload', payload);
         payload.data.options = eval(${field.optionsFunction.toString()})(api.data);
         return payload;
         `
@@ -312,7 +315,8 @@ function convertSFieldToAmisField(field, readonly) {
         case 'boolean':
             convertData = {
                 type: getAmisFieldType('switch', readonly),
-                option: field.inlineHelpText
+                option: field.inlineHelpText,
+                tpl: readonly ? Tpl.getSwitchTpl(field) : null
             }
             break;
         case 'date':

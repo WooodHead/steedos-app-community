@@ -40,6 +40,16 @@ function getLookupTpl(field){
     
 }
 
+function getSwitchTpl(field){
+    return `<% if (data.${field.name}) { %>
+    <span class="slds-icon_container slds-icon-utility-check slds-current-color" title="<%=data.${field.name}__label%>">
+        <div class="steedos-icon-wrap"><span><svg aria-hidden="true" class="slds-icon_x-small slds-icon slds-icon-text-default" viewBox="0 0 52 52" name="check"><path d="M19.1 42.5L2.6 25.9c-.6-.6-.6-1.6 0-2.2l2.2-2.2c.6-.6 1.6-.6 2.2 0L19.4 34c.4.4 1.1.4 1.5 0L45.2 9.5c.6-.6 1.6-.6 2.2 0l2.2 2.2c.6.6.6 1.6 0 2.2L21.3 42.5c-.6.7-1.6.7-2.2 0z"></path></svg></span></div>
+        <span class="slds-assistive-text"><%=data.${field.name}__label%></span>
+    </span>
+    <% } %>`
+}
+
+exports.getSwitchTpl = getSwitchTpl;
 exports.getSelectTpl = getSelectTpl;
 exports.getDateTpl = getDateTpl;
 exports.getDateTimeTpl = getDateTimeTpl;
