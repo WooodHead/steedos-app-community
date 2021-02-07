@@ -80,6 +80,8 @@ function convertSObjectToAmisSchema(object, recordId, readonly, userSession) {
         gapClassName = 'row-gap-4'
     }
 
+    const redirect = `/app/admin/${object.name}/view/${recordId}`
+
     return {
         type: 'page',
         bodyClassName: 'p-0',
@@ -90,7 +92,10 @@ function convertSObjectToAmisSchema(object, recordId, readonly, userSession) {
             {
                 type: "form",
                 mode: "horizontal",
-                reload: `page_${readonly ? 'readonly':'edit'}_${recordId}`,
+                reload: `page_${readonly ? 'edit':'readonly'}_${recordId}`,
+                redirect: redirect,
+                persistData: false,
+                promptPageLeave: readonly ? false : true,
                 name: `form_${readonly ? 'readonly':'edit'}_${recordId}`,
                 debug: false,
                 title: "",
@@ -100,7 +105,7 @@ function convertSObjectToAmisSchema(object, recordId, readonly, userSession) {
                 controls: fieldControls,
                 panelClassName:'m-0',
                 bodyClassName: 'p-0',
-                actions: readonly ? null : getFormActions(),
+                actions: readonly ? null : getFormActions(redirect),
                 actionsClassName: readonly ? null : "p-sm b-t b-light text-center",
                 className: `grid grid-cols-2 ${gapClassName} col-gap-6`
             }
@@ -230,18 +235,19 @@ function lookupToAmisSelect(field, readonly){
     return data;
 }
 
-function getFormActions(){
+function getFormActions(redirect){
     return [
         {
           "type": "button",
           "label": "取消",
-          "actionType": "reset",
+          "actionType": "link",
           "dialog": {
             "title": "系统提示",
             "body": "对你点击了"
           },
           "level": "default",
-          "block": false
+          "block": false,
+          "link": redirect
         },
         {
           "type": "button",
