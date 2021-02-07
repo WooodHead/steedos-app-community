@@ -12,3 +12,8 @@
 /* .row-main{
     border-radius: 0.25rem
 } */
+
+.amis-scope .a-Form-item--horizontal.col-span-2 .a-Form-itemColumn--2 {
+    flex: 0 0 8.3333333%;
+    max-width: 8.3333333%;
+}
