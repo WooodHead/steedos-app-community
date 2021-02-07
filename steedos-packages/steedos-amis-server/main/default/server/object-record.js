@@ -5,13 +5,16 @@ const OMIT_FIELDS = ['created', 'created_by', 'modified', 'modified_by'];
 
 function getReadonlyFormAdaptor(fields){
     let scriptStr = '';
-    const selectFields = _.filter(fields, function(field){return field.name.indexOf('.') < 0 && (field.type == 'select' && field.options)});
+    const selectFields = _.filter(fields, function(field){return field.name.indexOf('.') < 0 && ((field.type == 'select' && field.options) || ((field.type == 'lookup' || field.type == 'master_detail') && !field.reference_to))});
     _.each(selectFields, function(field){
         if(!_.include(OMIT_FIELDS, field.name)){
             const valueField = field.name;
-            const options = JSON.stringify({options: field.options});
-            console.log('options', options);
-            scriptStr = scriptStr + `var ${field.name}Options= (${options}).options;console.log('${field.name}Options', ${field.name}Options);`;
+            if(field.options){
+                const options = JSON.stringify({options: field.options});
+                scriptStr = scriptStr + `var ${field.name}Options= (${options}).options;console.log('${field.name}Options', ${field.name}Options);`;
+            }else if(field.optionsFunction){
+                scriptStr = scriptStr + `var ${field.name}Options = eval(${field.optionsFunction.toString()})(api.data);`
+            }
             if(field.multiple){
                 scriptStr = scriptStr + `data.${field.name}__label = _.pluck(_.filter(${field.name}Options, function(option){return _.include(data.${field.name}, option.value)}), 'label');`
             }else{
@@ -20,6 +23,20 @@ function getReadonlyFormAdaptor(fields){
             }
         }
     })
+
+    // const refFields = _.filter(fields, function(field){return field.name.indexOf('.') < 0 && (field.type == 'lookup' || field.type == 'master_detail') && !field.reference_to});
+    // _.each(refFields, function(field){
+    //     if(!_.include(OMIT_FIELDS, field.name)){
+    //         const valueField = field.reference_to_field || '_id';
+    //         scriptStr = scriptStr + `var ${field.name}Options = eval(${field.optionsFunction.toString()})(api.data);`
+    //         if(field.multiple){
+    //             scriptStr = scriptStr + `data.${field.name}__label = _.pluck(_.filter(${field.name}Options, function(option){return _.include(data.${field.name}, option.value)}), 'label');`
+    //         }else{
+    //             scriptStr = scriptStr + `var ${field.name}Selected = _.find(${field.name}Options, function(option){return data.${field.name} == option.value});`
+    //             scriptStr = scriptStr + `data.${field.name}__label = ${field.name}Selected ? ${field.name}Selected.label:null;`
+    //         }
+    //     }
+    // })
 
     return  `
     var data = payload.data.data[0];
@@ -45,7 +62,7 @@ function getReadonlyFormInitApi(object, recordId, fields){
  * @param {*} fields 
  */
 function getConvertDataScriptStr(fields){
-    const refFields = _.filter(fields, function(field){return field.name.indexOf('.') < 0 && (field.type == 'lookup' || field.type == 'master_detail')});
+    const refFields = _.filter(fields, function(field){return field.name.indexOf('.') < 0 && (field.type == 'lookup' || field.type == 'master_detail') && field.reference_to});
     let scriptStr = '';
     _.each(refFields, function(field){
         if(!_.include(OMIT_FIELDS, field.name)){
@@ -61,9 +78,6 @@ function getConvertDataScriptStr(fields){
 }
 
 function getEditFormInitApi(object, recordId, fields){
-
-    
-
     return {
         method: "post",
         url: graphql.getApi()+"?rf="+ (new Date()).getTime(),
@@ -72,6 +86,7 @@ function getEditFormInitApi(object, recordId, fields){
             var data = payload.data.data[0];
             ${getConvertDataScriptStr(fields)}
             payload.data = data;
+            console.log('getEditFormInitApi', data);
             return payload;
         `,
         data: graphql.getFindOneQuery(object, recordId, fields)
