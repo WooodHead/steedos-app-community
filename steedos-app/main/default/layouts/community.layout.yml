@@ -1,7 +1,9 @@
 name: default
 label: Community Layout
 object: community
-buttons: []
+buttons: 
+  - button_name:
+    visible_on: 
 compact_layout_fields: []
 fields: 
   - field_name: name
@@ -9,7 +11,7 @@ fields:
     readonly: true
     required: true
     group: General
-    visibleOn: 
+    visible_on: "this.name.length === 0"
 related_lists: 
   - object_name: community_pages
     sort_field: created
@@ -17,6 +19,6 @@ related_lists:
     field_name:
       - field
       - created
-    visibleOn: 
+    visible_on: 
 profiles:
 template: 
