@@ -203,9 +203,7 @@ function lookupToAmisSelect(field, readonly){
     let valueField = field.reference_to_field || '_id';
     if(field.optionsFunction){
         apiInfo.adaptor = `
-        console.log('api.data', api.data);
         payload.data.options = eval(${field.optionsFunction.toString()})(api.data);
-        console.log('payload.data', payload.data);
         return payload;
         `
         labelField = 'label';
@@ -283,7 +281,11 @@ function convertSFieldToAmisField(field, readonly) {
             convertData = {
                 type: getAmisFieldType('select', readonly),
                 joinValues: false,
-                options: field.options
+                options: field.options,
+                extractValue: true,
+                labelField: 'label',
+                valueField: 'value',
+                tpl: readonly ? Tpl.getSelectTpl(field) : null
             }
             if(_.has(field, 'defaultValue')){
                 convertData.value = field.defaultValue
@@ -303,14 +305,16 @@ function convertSFieldToAmisField(field, readonly) {
             convertData = {
                 type: getAmisFieldType('date', readonly),
                 format: "YYYY-MM-DD",
-                valueFormat:'YYYY-MM-DDT00:00:00.000[Z]'
+                valueFormat:'YYYY-MM-DDT00:00:00.000[Z]',
+                tpl: readonly ? Tpl.getDateTpl(field) : null
             }
             break;
         case 'datetime':
             convertData = {
                 type: getAmisFieldType('datetime', readonly),
-                format: 'YYYY-MM-DD HH:mm',
-                valueFormat:'YYYY-MM-DDTHH:mm:ss.SSS[Z]'
+                inputFormat: 'YYYY-MM-DD HH:mm',
+                format:'YYYY-MM-DDTHH:mm:ss.SSS[Z]',
+                tpl: readonly ? Tpl.getDateTimeTpl(field) : null
             }
             break;
         case 'number':
@@ -376,6 +380,7 @@ function convertSFieldToAmisField(field, readonly) {
             convertData = {
                 type: 'table',
                 strictMode:false,
+                needConfirm: false,
                 editable: !readonly,
                 addable: !readonly,
                 removable: !readonly,

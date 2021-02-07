@@ -68,11 +68,7 @@ function getSaveDataTpl(){
 
 function getSaveRequestAdaptor(){
     return `
-        console.log('this', this);
-        console.log('api', api);
-        console.log('api data', api.data);
         ${getSaveDataTpl()}
-        console.log('__saveData', __saveData);
         api.data.query = api.data.query.replace('{__saveData}', __saveData);
         return api;
     `

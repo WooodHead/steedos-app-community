@@ -7,9 +7,22 @@ function getModifiedInfoTpl(){
     return "<div><a href='/app/admin/users/view/${modified_by._id}'>${modified_by.name}</a> ${modified__label}</div>"
 }
 
+function getDateTpl(field){
+    return `<div>\${${field.name}__label}</div>`
+}
+
+
+function getDateTimeTpl(field){
+    return `<div>\${${field.name}__label}</div>`
+}
+
 function getRefObjectNameFieldName(field){
     const refObject = objectql.getObject(field.reference_to);
     return refObject.NAME_FIELD_KEY;
+}
+
+function getSelectTpl(field){
+    return `<div>\${${field.name}__label}</div>`
 }
 
 function getLookupTpl(field){
@@ -24,6 +37,9 @@ function getLookupTpl(field){
     
 }
 
+exports.getSelectTpl = getSelectTpl;
+exports.getDateTpl = getDateTpl;
+exports.getDateTimeTpl = getDateTimeTpl;
 exports.getLookupTpl = getLookupTpl
 exports.getCreatedInfoTpl = getCreatedInfoTpl
 exports.getModifiedInfoTpl = getModifiedInfoTpl
