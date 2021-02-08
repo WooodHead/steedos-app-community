@@ -10,6 +10,6 @@ router.get('/api/amis/schema/:objectName/:recordId', core.requireAuthentication,
     // const isSpaceAdmin = userSession.is_space_admin;
     let urlParams = req.params;
     let queryParams = req.query;
-    res.status(200).send({ schema: AmisSchema.getSchema(urlParams.objectName, urlParams.recordId, _.has(queryParams, 'readonly'), userSession)});
+    res.status(200).send({ schema: AmisSchema.getRecordSchema(urlParams.objectName, urlParams.recordId, _.has(queryParams, 'readonly'), userSession)});
 });
 exports.default = router;

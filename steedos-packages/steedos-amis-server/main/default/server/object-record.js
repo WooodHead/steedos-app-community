@@ -1,7 +1,9 @@
 const _ = require('underscore');
 const graphql = require('./graphql');
-const APICACHE = 100;
+const Fields = require('./fields');
+
 const OMIT_FIELDS = ['created', 'created_by', 'modified', 'modified_by'];
+const APICACHE = 100;
 
 function getReadonlyFormAdaptor(fields){
     let scriptStr = '';
@@ -93,5 +95,106 @@ function getEditFormInitApi(object, recordId, fields){
     }
 }
 
-exports.getReadonlyFormInitApi = getReadonlyFormInitApi
-exports.getEditFormInitApi = getEditFormInitApi
+function getSaveApi(object, recordId, fields, options){
+    return {
+        method: 'post',
+        url: graphql.getApi(),
+        data: graphql.getSaveQuery(object, recordId, fields, options),
+        requestAdaptor: graphql.getSaveRequestAdaptor()
+    }
+}
+
+function getInitApi(object, recordId, fields, readonly){
+    if(readonly){
+        return getReadonlyFormInitApi(object, recordId, fields);
+    }else{
+        return getEditFormInitApi(object, recordId, fields);
+    }
+}
+
+function getFormActions(redirect){
+    return [
+        {
+          "type": "button",
+          "label": "取消",
+          "actionType": "link",
+          "dialog": {
+            "title": "系统提示",
+            "body": "对你点击了"
+          },
+          "level": "default",
+          "block": false,
+          "link": redirect
+        },
+        {
+          "type": "button",
+          "label": "保存",
+          "actionType": "submit",
+          "level": "info",
+          "dialog": {
+            "title": "系统提示",
+            "body": "对你点击了"
+          }
+        }
+      ]
+}
+
+
+function convertSObjectToAmisSchema(object, recordId, readonly, userSession) {
+    const fieldControls = [];
+    const permissionFields = Fields.getPermissionFields(object, userSession)
+    _.each(permissionFields, function(perField){
+        let field = perField;
+        if(perField.type === 'grid'){
+            field = Fields.getGridFieldSubFields(perField, permissionFields);
+        }else if(perField.type === 'object'){
+            field = Fields.getObjectFieldSubFields(perField, permissionFields);
+        }
+        if(field.name.indexOf(".") < 0){
+            fieldControls.push(Fields.convertSFieldToAmisField(field, readonly))
+        }
+    })
+
+    _.each(Fields.getBaseFields(readonly), function(field){
+        fieldControls.push(field);
+    })
+
+    let gapClassName = 'row-gap-1';
+    if(!readonly){
+        gapClassName = 'row-gap-4'
+    }
+
+    const redirect = `/app/admin/${object.name}/view/${recordId}`
+
+    return {
+        type: 'page',
+        bodyClassName: 'p-0',
+        page: `page_${readonly ? 'readonly':'edit'}_${recordId}`,
+        initApi: readonly ? getInitApi(object, recordId, permissionFields, readonly) : null,
+        initFetch: readonly ? true : null,
+        body: [
+            {
+                type: "form",
+                mode: "horizontal",
+                reload: `page_${readonly ? 'edit':'readonly'}_${recordId}`,
+                redirect: redirect,
+                persistData: false,
+                promptPageLeave: readonly ? false : true,
+                name: `form_${readonly ? 'readonly':'edit'}_${recordId}`,
+                debug: false,
+                title: "",
+                api: readonly ? null : getSaveApi(object, recordId, permissionFields, {}),
+                initApi: readonly ? null : getInitApi(object, recordId, permissionFields, readonly),
+                initFetch: readonly ? null : true,
+                controls: fieldControls,
+                panelClassName:'m-0',
+                bodyClassName: 'p-0',
+                actions: readonly ? null : getFormActions(redirect),
+                actionsClassName: readonly ? null : "p-sm b-t b-light text-center",
+                className: `grid grid-cols-2 ${gapClassName} col-gap-6`
+            }
+        ]
+    }
+}
+
+exports.convertSObjectToAmisSchema = convertSObjectToAmisSchema;

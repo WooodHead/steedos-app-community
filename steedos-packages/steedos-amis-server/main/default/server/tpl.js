@@ -49,6 +49,14 @@ function getSwitchTpl(field){
     <% } %>`
 }
 
+function getPasswordTpl(field){
+    return `<% if (data.${field.name}) { %>
+        <span>······</span>
+        <% } %>`
+}
+
+//TODO
+exports.getPasswordTpl = getPasswordTpl;
 exports.getSwitchTpl = getSwitchTpl;
 exports.getSelectTpl = getSelectTpl;
 exports.getDateTpl = getDateTpl;
@@ -56,3 +64,13 @@ exports.getDateTimeTpl = getDateTimeTpl;
 exports.getLookupTpl = getLookupTpl
 exports.getCreatedInfoTpl = getCreatedInfoTpl
 exports.getModifiedInfoTpl = getModifiedInfoTpl
+exports.getFieldTpl = function(field){
+    switch (field.type) {
+        case value:
+            
+            break;
+    
+        default:
+            break;
+    }
+};
