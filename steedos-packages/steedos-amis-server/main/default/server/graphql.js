@@ -74,6 +74,34 @@ function getSaveRequestAdaptor(){
     `
 }
 
+function getFindQuery(object, recordId, fields, options){
+    let limit = options.limit || 10;
+    let queryOptions = `(top: ${limit})`;
+    if(recordId){
+        queryOptions = `(filters:["_id", "=", "${recordId}"], top: ${limit})`;
+    }
+    let alias = "data";
+    if(options){
+        if(options.alias){
+            alias = options.alias;
+        }
+
+        if(options.filters){
+            queryOptions = `(filters:${options.filters})`;
+        }
+        if(options.queryOptions){
+            queryOptions = `(${options.queryOptions})`;
+        }
+    }
+    return {
+        orderBy: "${orderBy}",
+        orderDir: "${orderDir}",
+        pageNo: "${page}",
+        pageSize: "${perPage}",
+        query: `{${alias}:${object.name}${queryOptions}{${getFieldsTemplate(fields)}},count(objectName: "${object.name}", filters:{__filters})}`
+    }
+}
+exports.getFindQuery = getFindQuery;
 exports.getFindOneQuery = getFindOneQuery;
 exports.getSaveQuery = getSaveQuery;
 exports.getSaveRequestAdaptor = getSaveRequestAdaptor;

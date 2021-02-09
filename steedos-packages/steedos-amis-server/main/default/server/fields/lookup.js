@@ -13,18 +13,60 @@ function lookupToAmisPicker(field, readonly){
     const refObjectConfig = clone(refObject.toConfig());
     const tableFields = [{name: '_id', label: 'ID', type: 'text'}];
     let i = 0;
+    const searchableFields = [];
     _.each(refObjectConfig.fields,function(field){
-        if(i < 5 || true){
+        if(i < 5){
             i++;
             tableFields.push(field)
+            if(field.searchable){
+                searchableFields.push(field.name);
+            }
         }
     })
+
+    const source = getApi(refObjectConfig, null, refObjectConfig.fields, {alias: 'rows', queryOptions: `filters: {__filters}, top: {__top}, skip: {__skip}, sort: "{__sort}"`});
+    source.data.$term = "$term";
+    if(searchableFields.length > 0){
+        source.data.$search = {}
+        _.each(searchableFields, function(fieldName){
+            source.data.$search[fieldName]= `\${${fieldName}}`;
+        })
+    }
+    
+    source.requestAdaptor = `
+    console.log('requestAdaptor api.data', api.data);
+        var filters = [];
+        var pageSize = api.data.pageSize || 10;
+        var pageNo = api.data.pageNo || 1;
+        var skip = (pageNo - 1) * pageSize;
+        var orderBy = api.data.orderBy || '';
+        var orderDir = api.data.orderDir || '';
+        var sort = orderBy + ' ' + orderDir;
+        if(api.data.$term){
+            filters = [["name", "contains", "'+ api.data.$term +'"]];
+        }else if(api.data.$value){
+            filters = [["_id", "=", "'+ api.data.$value +'"]];
+        }
+
+        if(api.data.$search){
+            Object.keys(api.data.$search).forEach(function(key){
+                const keyValue = api.data.$search[key];
+                if(keyValue){
+                    filters.push([key, "contains", keyValue]);
+                }
+            })
+        }
+
+        api.data.query = api.data.query.replaceAll('{__filters}', JSON.stringify(filters)).replace('{__top}', pageSize).replace('{__skip}', skip).replace('{__sort}', sort.trim());
+        return api;
+    `
+
     const data = {
         type: Field.getAmisStaticFieldType('picker', readonly),
         labelField: refObject.NAME_FIELD_KEY || 'name', //TODO
         valueField: field.reference_to_field || '_id', //TODO
         modalMode: 'dialog', //TODO 设置 dialog 或者 drawer，用来配置弹出方式
-        source: getApi(refObjectConfig, null, refObjectConfig.fields, {alias: 'rows'}),
+        source: source,
         size: "lg",
         pickerSchema: Table.getTableSchema(tableFields)
     }
@@ -120,7 +162,7 @@ function getApi(object, recordId, fields, options){
     return {
         method: "post",
         url: graphql.getApi(),
-        data: graphql.getFindOneQuery(object, recordId, fields, options)
+        data: graphql.getFindQuery(object, recordId, fields, options)
     }
 }
 

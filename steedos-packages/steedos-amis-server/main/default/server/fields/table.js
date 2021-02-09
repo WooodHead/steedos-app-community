@@ -1,4 +1,32 @@
 const Tpl = require('../tpl');
+const Fields = require('./index');
+const _ = require('underscore');
+
+function getOperation(fields){
+    const controls = [];
+    _.each(fields, function(field){
+        controls.push(Fields.convertSFieldToAmisField(field, true));
+    })
+    return {
+        "type": "operation",
+        "label": "操作",
+        "width": 100,
+        "buttons": [
+          {
+            "type": "button",
+            "icon": "fa fa-eye",
+            "actionType": "dialog",
+            "tooltip": "查看",
+            "dialog": {
+              "title": "查看",
+              "body": {
+                "type": "form",
+                "controls": controls
+              }
+            }
+        }]
+    }
+}
 
 function getTableColumns(fields){
     const columns = [];
@@ -21,6 +49,9 @@ function getTableColumns(fields){
             // toggled: true 
         })
     });
+
+    columns.push(getOperation(fields));
+
     return columns;
 }
 
