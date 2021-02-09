@@ -32,7 +32,7 @@ function getAmisStaticFieldType(type, readonly){
     if(!readonly){
         return type;
     }
-    if(_.include(['date', 'datetime', 'text'], type)){
+    if(_.include(['text'], type)){
         return `static-${type}`;
     }else{
         return 'static';
