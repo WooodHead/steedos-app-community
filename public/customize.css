@@ -17,3 +17,8 @@
     flex: 0 0 calc(8.33333333335% - 2px);
     max-width: calc(8.33333333335% - 2px);
 }
+
+.a-Table svg {
+    display: inline !important;
+    vertical-align: initial !important;
+}
