@@ -64,12 +64,23 @@ exports.getDateTimeTpl = getDateTimeTpl;
 exports.getLookupTpl = getLookupTpl
 exports.getCreatedInfoTpl = getCreatedInfoTpl
 exports.getModifiedInfoTpl = getModifiedInfoTpl
+
 exports.getFieldTpl = function(field){
     switch (field.type) {
-        case value:
-            
-            break;
-    
+        case 'password':
+            return getPasswordTpl(field);
+        case 'boolean':
+            return getSwitchTpl(field);
+        case 'select':
+            return getSelectTpl(field);
+        case 'date':
+            return getDateTpl(field);
+        case 'datetime':
+            return getDateTimeTpl(field);
+        case 'lookup':
+            return getLookupTpl(field);
+        case 'master_detail':
+            return getLookupTpl(field);
         default:
             break;
     }

@@ -28,15 +28,69 @@ function getBaseFields(readonly){
     ]
 };
 
-function getAmisFieldType(type, readonly){
+function getAmisStaticFieldType(type, readonly){
     if(!readonly){
         return type;
     }
-    if(_.include(['date', 'time', 'text'], type)){
+    if(_.include(['date', 'datetime', 'text'], type)){
         return `static-${type}`;
     }else{
         return 'static';
     }
+};
+
+function getAmisFieldType(sField){
+    switch (sField.type) {
+        case 'text':
+            return 'text';
+        case 'textarea':
+            return 'textarea';
+        case 'html':
+            return 'html';
+        case 'select':
+            return 'select';
+        case 'boolean':
+            return 'switch';
+        case 'date':
+            return 'date';
+        case 'datetime':
+            return 'datetime';
+        case 'number':
+            return 'number';
+        case 'currency':
+            return 'number';
+        case 'percent':
+            return 'number'
+        case 'password':
+            return 'password';
+        case 'lookup':
+            // TODO 根据字段配置返回 select || picker
+            return 'select';
+        case 'master_detail':
+            // TODO 根据字段配置返回 select || picker
+            return 'picker';
+        case 'autonumber':
+            return 'text';
+        case 'url':
+            return 'url'
+        case 'email':
+            return 'email'
+        case 'image':
+            return 'image'
+        case 'formula':
+            //TODO
+            break;
+        case 'summary':
+            //TODO
+            break;
+        case 'grid':
+            return 'table';
+        default:
+            console.log('convertData default', sField.type);
+            // convertData.type = field.type
+            break;
+    }
+
 };
 
 function getObjectFieldSubFields(mainField, fields){
@@ -79,20 +133,20 @@ function convertSFieldToAmisField(field, readonly) {
     let convertData = {};
     switch (field.type) {
         case 'text':
-            convertData.type = getAmisFieldType('text', readonly);
+            convertData.type = getAmisStaticFieldType('text', readonly);
             break;
         case 'textarea':
-            convertData.type = getAmisFieldType('textarea', readonly);
+            convertData.type = getAmisStaticFieldType('textarea', readonly);
             convertData.tpl = `<b><%=data.${field.name}%></b>`;
             break;
         case 'html':
             convertData = {
-                type: getAmisFieldType('html', readonly)
+                type: getAmisStaticFieldType('html', readonly)
             }
             break;
         case 'select':
             convertData = {
-                type: getAmisFieldType('select', readonly),
+                type: getAmisStaticFieldType('select', readonly),
                 joinValues: false,
                 options: field.options,
                 extractValue: true,
@@ -110,14 +164,14 @@ function convertSFieldToAmisField(field, readonly) {
             break;
         case 'boolean':
             convertData = {
-                type: getAmisFieldType('switch', readonly),
+                type: getAmisStaticFieldType('switch', readonly),
                 option: field.inlineHelpText,
                 tpl: readonly ? Tpl.getSwitchTpl(field) : null
             }
             break;
         case 'date':
             convertData = {
-                type: getAmisFieldType('date', readonly),
+                type: getAmisStaticFieldType('date', readonly),
                 format: "YYYY-MM-DD",
                 valueFormat:'YYYY-MM-DDT00:00:00.000[Z]',
                 tpl: readonly ? Tpl.getDateTpl(field) : null
@@ -125,7 +179,7 @@ function convertSFieldToAmisField(field, readonly) {
             break;
         case 'datetime':
             convertData = {
-                type: getAmisFieldType('datetime', readonly),
+                type: getAmisStaticFieldType('datetime', readonly),
                 inputFormat: 'YYYY-MM-DD HH:mm',
                 format:'YYYY-MM-DDTHH:mm:ss.SSS[Z]',
                 tpl: readonly ? Tpl.getDateTimeTpl(field) : null
@@ -133,7 +187,7 @@ function convertSFieldToAmisField(field, readonly) {
             break;
         case 'number':
             convertData = {
-                type: getAmisFieldType('number', readonly),
+                type: getAmisStaticFieldType('number', readonly),
                 min: field.min,
                 max: field.max,
                 precision: field.scale
@@ -142,7 +196,7 @@ function convertSFieldToAmisField(field, readonly) {
         case 'currency':
             //TODO
             convertData = {
-                type: getAmisFieldType('number', readonly),
+                type: getAmisStaticFieldType('number', readonly),
                 min: field.min,
                 max: field.max,
                 precision: field.scale
@@ -151,7 +205,7 @@ function convertSFieldToAmisField(field, readonly) {
         case 'percent':
             //TODO
             convertData = {
-                type: getAmisFieldType('number', readonly),
+                type: getAmisStaticFieldType('number', readonly),
                 min: field.min,
                 max: field.max,
                 precision: field.scale
@@ -159,7 +213,7 @@ function convertSFieldToAmisField(field, readonly) {
             break;
         case 'password':
             convertData = {
-                type: getAmisFieldType('password', readonly),
+                type: getAmisStaticFieldType('password', readonly),
                 tpl: readonly ? Tpl.getPasswordTpl(field) : null
             }
             break;
@@ -174,12 +228,12 @@ function convertSFieldToAmisField(field, readonly) {
             break;
         case 'url':
             convertData = {
-                type: getAmisFieldType('url', readonly)
+                type: getAmisStaticFieldType('url', readonly)
             }
             break;
         case 'email':
             convertData = {
-                type: getAmisFieldType('email', readonly)
+                type: getAmisStaticFieldType('email', readonly)
             }
             break;
         case 'image':
@@ -243,5 +297,6 @@ exports.convertSFieldToAmisField = convertSFieldToAmisField;
 exports.getPermissionFields = getPermissionFields;
 exports.getObjectFieldSubFields = getObjectFieldSubFields;
 exports.getGridFieldSubFields = getGridFieldSubFields;
-exports.getAmisFieldType = getAmisFieldType;
+exports.getAmisStaticFieldType = getAmisStaticFieldType;
 exports.getBaseFields = getBaseFields;
+exports.getAmisFieldType = getAmisFieldType;

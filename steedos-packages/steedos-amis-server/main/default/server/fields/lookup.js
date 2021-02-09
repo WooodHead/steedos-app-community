@@ -4,43 +4,29 @@ const graphql = require('../graphql');
 const clone = require('clone');
 const Tpl = require('../tpl');
 const Field = require('./index');
+const Table = require('./table');
 function lookupToAmisPicker(field, readonly){
     if(!field.reference_to){
         return ;
     }
     const refObject = objectql.getObject(field.reference_to);
     const refObjectConfig = clone(refObject.toConfig());
+    const tableFields = [{name: '_id', label: 'ID', type: 'text'}];
+    let i = 0;
+    _.each(refObjectConfig.fields,function(field){
+        if(i < 5 || true){
+            i++;
+            tableFields.push(field)
+        }
+    })
     const data = {
-        type: Field.getAmisFieldType('picker', readonly),
+        type: Field.getAmisStaticFieldType('picker', readonly),
         labelField: refObject.NAME_FIELD_KEY || 'name', //TODO
         valueField: field.reference_to_field || '_id', //TODO
         modalMode: 'dialog', //TODO 设置 dialog 或者 drawer，用来配置弹出方式
         source: getApi(refObjectConfig, null, refObjectConfig.fields, {alias: 'rows'}),
         size: "lg",
-        pickerSchema: {
-            mode: "table",
-            name: "thelist",
-            draggable: false,
-            headerToolbar: ['switch-per-page', 'pagination'],
-            columns: [
-                {
-                    "name": "_id",
-                    "label": "_id",
-                    "sortable": true,
-                    "searchable": true,
-                    "type": "text",
-                    "toggled": true
-                },
-                {
-                    "name": "name",
-                    "label": "Name",
-                    "sortable": true,
-                    "searchable": true,
-                    "type": "text",
-                    "toggled": true
-                }
-            ]
-        }
+        pickerSchema: Table.getTableSchema(tableFields)
     }
     if(field.multiple){
         data.multiple = true
@@ -108,7 +94,7 @@ function lookupToAmisSelect(field, readonly){
     }
 
     const data = {
-        type: Field.getAmisFieldType('select', readonly),
+        type: Field.getAmisStaticFieldType('select', readonly),
         joinValues: false,
         extractValue: true,
         labelField: labelField,

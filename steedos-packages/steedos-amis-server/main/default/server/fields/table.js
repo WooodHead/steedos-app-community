@@ -1,15 +1,27 @@
+const Tpl = require('../tpl');
+
 function getTableColumns(fields){
     const columns = [];
     _.each(fields, function(field){
+
+        const tpl = Tpl.getFieldTpl(field);
+
+        let type = 'text';
+        if(tpl){
+            type = 'tpl';
+        }
+
         columns.push({
             name: field.name,
             label: field.label,
             sortable: field.sortable,
             searchable: field.searchable,
-            type: "text",
+            type: type,
+            tpl: tpl,
             // toggled: true 
         })
-    })
+    });
+    return columns;
 }
 
 exports.getTableSchema = function(fields, options){
@@ -18,23 +30,6 @@ exports.getTableSchema = function(fields, options){
         name: "thelist",
         draggable: false,
         headerToolbar: ['switch-per-page', 'pagination'],
-        columns: [
-            {
-                "name": "_id",
-                "label": "_id",
-                "sortable": true,
-                "searchable": true,
-                "type": "text",
-                "toggled": true
-            },
-            {
-                "name": "name",
-                "label": "Name",
-                "sortable": true,
-                "searchable": true,
-                "type": "text",
-                "toggled": true
-            }
-        ]
+        columns: getTableColumns(fields)
     }
 }
