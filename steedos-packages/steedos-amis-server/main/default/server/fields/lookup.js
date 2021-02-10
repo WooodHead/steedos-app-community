@@ -36,7 +36,6 @@ function lookupToAmisPicker(field, readonly){
     source.data.$term = "$term";
     source.data.$self = "$$";
     source.requestAdaptor = `
-        console.log('api.data', api.data);
         const selfData = JSON.parse(JSON.stringify(api.data.$self));
         var filters = [];
         var pageSize = api.data.pageSize || 10;
