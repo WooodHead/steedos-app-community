@@ -11,7 +11,15 @@ function lookupToAmisPicker(field, readonly){
     }
     const refObject = objectql.getObject(field.reference_to);
     const refObjectConfig = clone(refObject.toConfig());
-    const tableFields = [{name: '_id', label: 'ID', type: 'text'}];
+
+    let valueField = field.reference_to_field || refObject.key_field || '_id';
+
+    const tableFields = [];
+    if(valueField === '_id'){
+        tableFields.push({name: '_id', label: 'ID', type: 'text', toggled: false});
+    }else{
+        tableFields.push(refObjectConfig.fields[valueField]);
+    }
     let i = 0;
     const searchableFields = [];
     _.each(refObjectConfig.fields,function(field){
@@ -28,6 +36,8 @@ function lookupToAmisPicker(field, readonly){
     source.data.$term = "$term";
     source.data.$self = "$$";
     source.requestAdaptor = `
+        console.log('api.data', api.data);
+        const selfData = JSON.parse(JSON.stringify(api.data.$self));
         var filters = [];
         var pageSize = api.data.pageSize || 10;
         var pageNo = api.data.pageNo || 1;
@@ -38,10 +48,9 @@ function lookupToAmisPicker(field, readonly){
         var allowSearchFields = ${JSON.stringify(searchableFields)};
         if(api.data.$term){
             filters = [["name", "contains", "'+ api.data.$term +'"]];
-        }else if(api.data.$value){
-            filters = [["_id", "=", "'+ api.data.$value +'"]];
+        }else if(selfData.op === 'loadOptions' && selfData.value){
+            filters = [["${valueField}", "=", selfData.value]];
         }
-        const selfData = JSON.parse(JSON.stringify(api.data.$self));
         if(allowSearchFields){
             allowSearchFields.forEach(function(key){
                 const keyValue = selfData[key];

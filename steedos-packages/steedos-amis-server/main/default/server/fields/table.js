@@ -47,6 +47,7 @@ function getTableColumns(fields){
             searchable: field.searchable,
             type: type,
             tpl: tpl,
+            toggled: field.toggled
             // toggled: true 
         })
     });
