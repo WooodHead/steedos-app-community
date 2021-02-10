@@ -17,6 +17,7 @@ function getOperation(fields){
             "icon": "fa fa-eye",
             "actionType": "dialog",
             "tooltip": "查看",
+            size: "lg",
             "dialog": {
               "title": "查看",
               "body": {

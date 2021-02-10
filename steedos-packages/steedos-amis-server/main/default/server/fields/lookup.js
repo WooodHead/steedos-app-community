@@ -26,15 +26,8 @@ function lookupToAmisPicker(field, readonly){
 
     const source = getApi(refObjectConfig, null, refObjectConfig.fields, {alias: 'rows', queryOptions: `filters: {__filters}, top: {__top}, skip: {__skip}, sort: "{__sort}"`});
     source.data.$term = "$term";
-    if(searchableFields.length > 0){
-        source.data.$search = {}
-        _.each(searchableFields, function(fieldName){
-            source.data.$search[fieldName]= `\${${fieldName}}`;
-        })
-    }
-    
+    source.data.$self = "$$";
     source.requestAdaptor = `
-    console.log('requestAdaptor api.data', api.data);
         var filters = [];
         var pageSize = api.data.pageSize || 10;
         var pageNo = api.data.pageNo || 1;
@@ -42,21 +35,21 @@ function lookupToAmisPicker(field, readonly){
         var orderBy = api.data.orderBy || '';
         var orderDir = api.data.orderDir || '';
         var sort = orderBy + ' ' + orderDir;
+        var allowSearchFields = ${JSON.stringify(searchableFields)};
         if(api.data.$term){
             filters = [["name", "contains", "'+ api.data.$term +'"]];
         }else if(api.data.$value){
             filters = [["_id", "=", "'+ api.data.$value +'"]];
         }
-
-        if(api.data.$search){
-            Object.keys(api.data.$search).forEach(function(key){
-                const keyValue = api.data.$search[key];
+        const selfData = JSON.parse(JSON.stringify(api.data.$self));
+        if(allowSearchFields){
+            allowSearchFields.forEach(function(key){
+                const keyValue = selfData[key];
                 if(keyValue){
                     filters.push([key, "contains", keyValue]);
                 }
             })
         }
-
         api.data.query = api.data.query.replaceAll('{__filters}', JSON.stringify(filters)).replace('{__top}', pageSize).replace('{__skip}', skip).replace('{__sort}', sort.trim());
         return api;
     `
@@ -68,6 +61,9 @@ function lookupToAmisPicker(field, readonly){
         modalMode: 'dialog', //TODO 设置 dialog 或者 drawer，用来配置弹出方式
         source: source,
         size: "lg",
+        data: {
+            name: ''
+        },
         pickerSchema: Table.getTableSchema(tableFields)
     }
     if(field.multiple){
@@ -120,14 +116,13 @@ function lookupToAmisSelect(field, readonly){
         }else if(api.data.$value){
             filters = '["_id", "=", "'+ api.data.$value +'"]';
         }
-        api.data.query = api.data.query.replace('{__filters}', filters).replace('{__top}', top);
+        api.data.query = api.data.query.replaceAll('{__filters}', filters).replace('{__top}', top);
         return api;
     `
     let labelField = refObject.NAME_FIELD_KEY || 'name';
     let valueField = field.reference_to_field || '_id';
     if(field.optionsFunction){
         apiInfo.adaptor = `
-        console.log('${field.name} adaptor payload', payload);
         payload.data.options = eval(${field.optionsFunction.toString()})(api.data);
         return payload;
         `
