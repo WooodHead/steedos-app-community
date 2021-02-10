@@ -42,6 +42,11 @@
       return Steedos.authRequest(api, {async: false}).schema;
     }
 
+    window.getSObjectListSchema = function(objectName, listview, fields){
+      let api = `/api/amis/list/${objectName}/?list_view=${listview}&fields=${fields}&t=${(new Date()).getTime()}`;
+      return Steedos.authRequest(api, {async: false}).schema;
+    }
+
     window.AmisEmbed = function(tagger, schema){
       $(tagger).children().remove();
       $(tagger).append(`<div class='${schema.name}'></div>`)

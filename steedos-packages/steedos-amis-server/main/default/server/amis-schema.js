@@ -3,7 +3,7 @@ const objectql = require('@steedos/objectql');
 const steedosI18n = require("@steedos/i18n");
 const clone = require('clone');
 const ObjectRecord = require('./object-record');
-
+const ObjectList = require('./object-list');
 /**
  * 
  * @param {*} mainObjectName 
@@ -19,4 +19,9 @@ function getRecordSchema(mainObjectName, recordId, readonly, userSession) {
     return ObjectRecord.convertSObjectToAmisSchema(object, recordId, readonly);
 }
 
+function getListSchema(mainObject, fields, options, userSession){
+    return ObjectList.getObjectList(mainObject, fields, options)
+}
+
+exports.getListSchema = getListSchema
 exports.getRecordSchema = getRecordSchema
