@@ -46,7 +46,11 @@
       $(tagger).children().remove();
       $(tagger).append(`<div class='${schema.name}'></div>`)
       return SteedosAmis.embed(`.${schema.name}`, schema, null, {
-        jumpTo: to => { console.log('jumpTo', to);if(FlowRouter.current().path == to){FlowRouter.reload()}else{FlowRouter.go(to);}},
+        jumpTo: (to, link) => { console.log('jumpTo', to);
+        if(link && link.blank){
+          return window.open(to);
+        }
+        if(FlowRouter.current().path == to){FlowRouter.reload()}else{FlowRouter.go(to);}},
         updateLocation: (to, replace) => {console.log('updateLocation', to, replace)}
       });
     }
