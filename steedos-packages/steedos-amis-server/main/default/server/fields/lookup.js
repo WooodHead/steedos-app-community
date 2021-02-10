@@ -61,9 +61,6 @@ function lookupToAmisPicker(field, readonly){
         modalMode: 'dialog', //TODO 设置 dialog 或者 drawer，用来配置弹出方式
         source: source,
         size: "lg",
-        data: {
-            name: ''
-        },
         pickerSchema: Table.getTableSchema(tableFields)
     }
     if(field.multiple){
