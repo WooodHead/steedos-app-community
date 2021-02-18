@@ -26,7 +26,6 @@ router.get('/api/get/app/strore/schema', core.requireAuthentication, async funct
             "size": "md",
             "className": "font-bold text-dark p-t-xs p-b-xs b-t b-b b-l",
             "actions": [ 
-                
             ],
             "body": [{
                 "type": "page",
@@ -301,13 +300,14 @@ router.get('/api/get/app/strore/schema', core.requireAuthentication, async funct
                                         },
                                         {
                                             "type": "hbox",
-                                            "className": "text-right",
+                                            "className": "font-bold no-bg text-md",
                                             "columns": [
                                                 {
                                                     "type": "plain",
                                                     "tpl": "",
                                                     "inline": false,
-                                                    "placeholder": ""
+                                                    "placeholder": "",
+                                                    "className": "font-bold no-bg text-blue-500 p-t-xs p-b-xs text-sm"
                                                 },
                                                 {
                                                     "type": "button",
@@ -318,7 +318,6 @@ router.get('/api/get/app/strore/schema', core.requireAuthentication, async funct
                                                     "size": "md",
                                                     "confirmText": "您确定要安装该软件包吗？",
                                                     "url": "/api/package/installing_from_app_exchange/${package_version.versionId}"
-                                                   
                                                 }
                                             ],
                                             "title": "",
