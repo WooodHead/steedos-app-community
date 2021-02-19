@@ -42,9 +42,20 @@
       return Steedos.authRequest(api, {async: false}).schema;
     }
 
-    window.getSObjectListSchema = function(objectName, listview, fields){
-      let api = `/api/amis/list/${objectName}/?list_view=${listview}&fields=${fields}&t=${(new Date()).getTime()}`;
-      return Steedos.authRequest(api, {async: false}).schema;
+    window.getSObjectListSchema = function(objectName, listview, fields, options){
+      let api = `/api/amis/list/${objectName}`;
+      let urlSearch = new URLSearchParams();
+      if(listview){
+        urlSearch.append('list_view', listview);
+      }
+      if(fields){
+        urlSearch.append('fields', fields);
+      }
+      _.each(options, function(option, key){
+        urlSearch.append(key, option);
+      })
+      urlSearch.append('t', (new Date()).getTime());
+      return Steedos.authRequest(`${api}/?${urlSearch.toString()}`, {async: false}).schema;
     }
 
     window.AmisEmbed = function(tagger, schema){

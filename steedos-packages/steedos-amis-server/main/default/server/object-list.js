@@ -65,7 +65,7 @@ exports.getObjectList = function(mainObject, fields, options){
     return {
         type: 'page',
         bodyClassName: 'p-0',
-        page: `page_list_${mainObject.name}`,
+        name: `page_list_${mainObject.name}`,
         body: Object.assign({}, table, {type: 'crud', keepItemSelectionOnPageChange: true, headerToolbar: getHeaderToolbar(mainObject),"bulkActions": bulkActions, api: Table.getTableApi(mainObject, fields)})
     }
     return 

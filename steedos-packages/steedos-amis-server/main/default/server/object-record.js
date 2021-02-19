@@ -169,7 +169,7 @@ function convertSObjectToAmisSchema(object, recordId, readonly, userSession) {
     return {
         type: 'page',
         bodyClassName: 'p-0',
-        page: `page_${readonly ? 'readonly':'edit'}_${recordId}`,
+        name: `page_${readonly ? 'readonly':'edit'}_${recordId}`,
         initApi: readonly ? getInitApi(object, recordId, permissionFields, readonly) : null,
         initFetch: readonly ? true : null,
         body: [

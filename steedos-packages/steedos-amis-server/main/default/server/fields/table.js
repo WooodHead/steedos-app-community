@@ -29,8 +29,11 @@ function getOperation(fields){
     }
 }
 
+//获取name字段，如果没有，则_index字段添加链接
+function getDetailColumn(){}
+
 function getTableColumns(fields){
-    const columns = [];
+    const columns = [{name: '_index',type: 'text', width: 32}];
     _.each(fields, function(field){
 
         const tpl = Tpl.getFieldTpl(field);
@@ -45,6 +48,7 @@ function getTableColumns(fields){
             label: field.label,
             sortable: field.sortable,
             searchable: field.searchable,
+            width: field.width,
             type: type,
             tpl: tpl,
             toggled: field.toggled
@@ -57,12 +61,22 @@ function getTableColumns(fields){
     return columns;
 }
 
+function getDefaultParams(options){
+    return {
+        perPage: options.top || 10
+    }
+}
+
 exports.getTableSchema = function(fields, options){
+    if(!options){
+        options = {};
+    }
     return {
         mode: "table",
         name: "thelist",
         draggable: false,
         headerToolbar: ['switch-per-page', 'pagination'],
+        defaultParams: getDefaultParams(options),
         columns: getTableColumns(fields)
     }
 }
@@ -104,6 +118,13 @@ exports.getTableApi = function(mainObject, fields){
         api.data.query = api.data.query.replaceAll('{__filters}', JSON.stringify(filters)).replace('{__top}', pageSize).replace('{__skip}', skip).replace('{__sort}', sort.trim());
         return api;
     `
+    api.adaptor = `
+    _.each(payload.data.rows, function(item, index){
+        item._index = index + 1;
+    })
+    console.log('payload.data', payload.data);
+    return payload;
+    `;
     return api;
 }
 
